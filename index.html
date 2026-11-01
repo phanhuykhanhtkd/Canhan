@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="KIM_THUY" data-color-mode="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Sổ Tay Cá Nhân" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#0F2537" />
+  <title>SỔ TAY CÁ NHÂN | Quản Lý Công Việc – Tài Chính – Tiết Kiệm</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Lớp phủ đóng menu trên điện thoại -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="AppController.toggleMobileSidebar(false)"></div>
+
+    <!-- ====================================================================
+         THANH ĐIỀU HƯỚNG BÊN TRÁI (SIDEBAR)
+         ==================================================================== -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-brand">
+        <div class="brand-emblem">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#091724" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>SỔ TAY CÁ NHÂN</h1>
+          <p>Công Việc • Tài Chính • Tụ Tài</p>
+        </div>
+      </div>
+
+      <div class="sidebar-wealth-box">
+        <div class="wealth-label">
+          <span>TỔNG TÀI SẢN TIỀN</span>
+          <span>VND</span>
+        </div>
+        <div class="wealth-value" id="sidebarTotalAssets">0đ</div>
+        <div class="wealth-sub" id="sidebarPeriodLabel">Kỳ lương hiện tại</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">6 PHÂN HỆ NGHIỆP VỤ CHÍNH</div>
+        <button class="nav-item active" data-tab="dashboard" onclick="AppController.switchTab('dashboard')">
+          <span class="nav-icon">📊</span>
+          <span>1. Tổng quan (Dashboard)</span>
+        </button>
+        <button class="nav-item" data-tab="work" onclick="AppController.switchTab('work')">
+          <span class="nav-icon">📋</span>
+          <span>2. Công việc & Tạm ứng</span>
+          <span class="nav-badge" id="navUnpaidBadge">0</span>
+        </button>
+        <button class="nav-item" data-tab="income" onclick="AppController.switchTab('income')">
+          <span class="nav-icon">💰</span>
+          <span>3. Thu nhập & Kỳ lương</span>
+        </button>
+        <button class="nav-item" data-tab="expense" onclick="AppController.switchTab('expense')">
+          <span class="nav-icon">💸</span>
+          <span>4. Chi tiêu & Đưa vợ</span>
+        </button>
+        <button class="nav-item" data-tab="accounts" onclick="AppController.switchTab('accounts')">
+          <span class="nav-icon">🏦</span>
+          <span>5. Tài khoản & Tiết kiệm</span>
+        </button>
+        <button class="nav-item" data-tab="report" onclick="AppController.switchTab('report')">
+          <span class="nav-icon">📈</span>
+          <span>6. Báo cáo & Xuất File</span>
+        </button>
+
+        <div class="nav-section-title">KẾ HOẠCH & HỆ THỐNG</div>
+        <button class="nav-item" data-tab="plan" onclick="AppController.switchTab('plan')">
+          <span class="nav-icon">📅</span>
+          <span>7. Dự thu – Dự chi</span>
+        </button>
+        <button class="nav-item" data-tab="settings" onclick="AppController.switchTab('settings')">
+          <span class="nav-icon">⚙️</span>
+          <span>8. Danh mục & Sao lưu</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div>🛡️ Hạch toán chuẩn • Không tính trùng</div>
+        <div style="margin-top:3px;color:var(--gold-400);">Phiên bản 2.5 Luxury • Kim Thủy Tụ Tài</div>
+      </div>
+    </aside>
+
+    <!-- ====================================================================
+         KHU VỰC CHÍNH (MAIN WRAPPER)
+         ==================================================================== -->
+    <div class="main-wrapper">
+      <!-- TOPBAR SIÊU TINH GỌN 1 HÀNG -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" onclick="AppController.toggleMobileSidebar()" title="Mở menu">☰</button>
+          <div class="page-title-group">
+            <h2 id="currentPageTitle">Tổng Quan Công Việc & Tài Chính</h2>
+            <div class="lunar-fengshui-bar">
+              <span id="lunarDateText">Chủ Nhật, 01/11/2026</span>
+              <span>•</span>
+              <span id="fengShuiElementPill" style="color:var(--gold-600);font-weight:700;">Kim sinh Thủy</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="topbar-controls">
+          <!-- Bộ chọn Kỳ xem sổ tinh gọn -->
+          <div class="compact-period-pill" title="Chọn kỳ xem số liệu (Kỳ lương / Tháng / Quý / Năm)">
+            <span class="period-icon">📆</span>
+            <select id="topPeriodSelect" class="period-select">
+              <option value="KY_LUONG">Kỳ lương (13/10→12/11)</option>
+              <option value="THANG_NAY">Tháng này (11/2026)</option>
+              <option value="THANG_TRUOC">Tháng trước (10/2026)</option>
+              <option value="QUY_NAY">Quý 4 / 2026</option>
+              <option value="NAM_NAY">Cả năm 2026</option>
+              <option value="TAT_CA">Toàn bộ thời gian</option>
+              <option value="TUY_CHON">Chọn ngày cụ thể...</option>
+            </select>
+          </div>
+
+          <!-- Nút Bật Sáng / Tối (Light / Dark Mode) -->
+          <button class="icon-action-btn" id="btnToggleColorMode" onclick="AppController.toggleColorMode()" title="Chuyển chế độ Sáng / Tối">
+            <span id="colorModeIcon">🌙</span>
+            <span class="btn-label-desktop" id="colorModeLabel">Tối</span>
+          </button>
+
+          <!-- Nút mở hộp Phong Thủy & Sao lưu tinh gọn -->
+          <button class="icon-action-btn gold-btn" onclick="AppController.openModal('modalQuickStyle')" title="Tùy chỉnh Phong thủy, Giải thích Kỳ lương & Sao lưu">
+            <span>✨</span>
+            <span class="btn-label-desktop">Phong thủy & Sao lưu</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Thanh chọn Từ ngày - Đến ngày (chỉ hiện khi chọn "Chọn ngày cụ thể...") -->
+      <div class="custom-date-bar" id="customDateRangeBox">
+        <span>Từ ngày:</span>
+        <input type="date" id="customStartInput" value="2026-10-13" />
+        <span>Đến ngày:</span>
+        <input type="date" id="customEndInput" value="2026-11-12" />
+        <button class="btn btn-sm btn-primary" id="btnApplyCustomDate">Áp dụng lọc</button>
+      </div>
+
+      <!-- ==================================================================
+           NỘI DUNG CÁC PHÂN HỆ (MINH ĐƯỜNG TỤ KHÍ)
+           ================================================================== -->
+      <main class="content-container">
+
+        <!-- ================================================================
+             PHÂN HỆ 1: TỔNG QUAN – DASHBOARD (CÓ THU GỌN / MỞ RỘNG TỪNG NHÓM)
+             ================================================================ -->
+        <section class="tab-pane active" id="tab-dashboard">
+          <!-- HERO BANNER TÀI SẢN & THAO TÁC NHANH -->
+          <div class="hero-prosperity-banner">
+            <div class="hero-top-row">
+              <div class="hero-greeting">
+                <div class="hero-badges-row">
+                  <span class="badge badge-gold" id="dashboardPeriodBadge">Kỳ lương 13/10 – 12/11/2026</span>
+                  <button class="btn btn-sm" style="background:rgba(255,255,255,0.12);color:#FFF;padding:2px 8px;font-size:10.5px;" onclick="AppController.openModal('modalQuickStyle')">❓ Kỳ lương là gì?</button>
+                </div>
+                <h3 id="heroGreetingTitle">✦ KIM THỦY TƯƠNG SINH – TỤ TÀI VƯỢNG LỘC</h3>
+                <p id="heroGreetingSub">Minh đường sáng sủa, sổ sách phân minh, tiền tài tụ hội vững bền.</p>
+              </div>
+              <div class="hero-networth-pill">
+                <span>Tổng Tài Sản Tiền Hiện Có (Mặt + NH + Tiết Kiệm)</span>
+                <strong id="heroTotalAssets">0đ</strong>
+              </div>
+            </div>
+
+            <!-- 3 Chỉ số tóm tắt nhanh luôn hiển thị gọn gàng -->
+            <div class="hero-mini-stats">
+              <div class="hero-mini-item">
+                <div class="hm-label">Tổng thu thực nhận</div>
+                <div class="hm-val" style="color:#6EE7B7;" id="heroMiniIncome">0đ</div>
+              </div>
+              <div class="hero-mini-item">
+                <div class="hm-label">Tổng chi (Gồm đưa vợ)</div>
+                <div class="hm-val" style="color:#FDA4AF;" id="heroMiniExpense">0đ</div>
+              </div>
+              <div class="hero-mini-item">
+                <div class="hm-label">CV còn phải nhận</div>
+                <div class="hm-val" style="color:var(--gold-300);" id="heroMiniPendingWork">0đ</div>
+              </div>
+            </div>
+
+            <!-- Thanh tiêu đề nhỏ đóng/mở 8 nút thao tác nhanh -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.12);">
+              <span style="font-size:11.5px;color:var(--gold-300);font-weight:700;">⚡ THAO TÁC NHẬP NHANH 1 CHẠM</span>
+              <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#FFF;padding:3px 9px;font-size:11px;" onclick="AppController.toggleQuickActions()" id="btnToggleQuickActions">Thu gọn ▴</button>
+            </div>
+
+            <!-- 8 Nút Thao tác nhanh -->
+            <div class="quick-actions-bar" id="heroQuickActionsBar">
+              <button class="quick-btn gold-highlight" onclick="AppController.openWorkModal()">➕ 1. Thêm việc</button>
+              <button class="quick-btn" onclick="AppController.openWorkTxModal(null, 'Tạm ứng nhận được')">📥 2. Tạm ứng CV</button>
+              <button class="quick-btn" onclick="AppController.openWorkTxModal(null, 'Thanh toán bổ sung')">✅ 3. Thanh toán CV</button>
+              <button class="quick-btn" onclick="AppController.openIncomeModal()">💰 4. Thêm khoản thu</button>
+              <button class="quick-btn" onclick="AppController.openExpenseModal()">💸 5. Thêm khoản chi</button>
+              <button class="quick-btn" style="border-color:#FDA4AF;color:#FFE4E6;" onclick="AppController.openExpenseModal(null, 'Đưa vợ')">💝 6. Đưa vợ nhanh</button>
+              <button class="quick-btn" onclick="AppController.openTransferModal()">🔄 7. Chuyển tiền</button>
+              <button class="quick-btn" onclick="AppController.openSavingTxModal(null, 'GUI_TIET_KIEM')">🐷 8. Gửi tiết kiệm</button>
+            </div>
+          </div>
+
+          <!-- Thanh điều khiển Mở tất cả / Thu gọn tất cả các Nhóm -->
+          <div class="dashboard-toolbar-row">
+            <span class="toolbar-hint">💡 Ấn vào từng mục dưới đây để mở xem chi tiết hoặc thu gọn:</span>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-sm btn-outline" onclick="AppController.setAllAccordions(true)">Mở tất cả</button>
+              <button class="btn btn-sm btn-outline" onclick="AppController.setAllAccordions(false)">Thu gọn tất cả</button>
+            </div>
+          </div>
+
+          <!-- ==============================================================
+               MỤC ACCORDION 1: NHÓM 1 - CHỈ SỐ CÔNG VIỆC & KHOẢN PHẢI THU
+               ============================================================== -->
+          <div class="accordion-card" id="acc-work">
+            <button class="accordion-header" onclick="AppController.toggleAccordion('acc-work')">
+              <div class="acc-title-wrap">
+                <span class="acc-step-badge">1</span>
+                <div class="acc-title-text">
+                  <h3>📋 Nhóm 1: Công Việc & Khoản Tiền Còn Phải Nhận</h3>
+                  <p>Theo dõi tổng số việc, việc đang làm, hoàn thành và công nợ chưa thanh toán</p>
+                </div>
+              </div>
+              <div class="acc-right-wrap">
+                <span class="acc-summary-pill" id="accSumWork">0 việc • Còn thu: 0đ</span>
+                <span class="acc-chevron">▾</span>
+              </div>
+            </button>
+            <div class="accordion-body">
+              <div class="kpi-grid-5">
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Tổng số công việc</span><span class="kpi-icon" style="background:var(--info-bg);">📋</span></div>
+                  <div class="kpi-value" id="kpiWorkTotal">0 việc</div>
+                  <div class="kpi-sub"><span>Toàn bộ nhiệm vụ</span></div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Đang thực hiện</span><span class="kpi-icon" style="background:var(--warning-bg);">⚡</span></div>
+                  <div class="kpi-value text-warning" id="kpiWorkInProgress">0 việc</div>
+                  <div class="kpi-sub"><span>Đang triển khai</span></div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Đã hoàn thành</span><span class="kpi-icon" style="background:var(--success-bg);">✅</span></div>
+                  <div class="kpi-value text-success" id="kpiWorkCompleted">0 việc</div>
+                  <div class="kpi-sub"><span>Đã xong nhiệm vụ</span></div>
+                </div>
+                <div class="kpi-card gold-border">
+                  <div class="kpi-top"><span class="kpi-title">Chưa thanh toán đủ</span><span class="kpi-icon" style="background:var(--danger-bg);">⏳</span></div>
+                  <div class="kpi-value text-danger" id="kpiWorkUnpaid">0 việc</div>
+                  <div class="kpi-sub"><span id="kpiWorkRemainingMoney">Còn phải thu: 0đ</span></div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Sắp đến hạn nhận tiền</span><span class="kpi-icon" style="background:var(--warning-bg);">🔔</span></div>
+                  <div class="kpi-value text-gold" id="kpiWorkDueSoon">0 việc</div>
+                  <div class="kpi-sub"><span>Trong vòng 10 ngày</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==============================================================
+               MỤC ACCORDION 2: NHÓM 2 - CHỈ SỐ THU NHẬP & QUYẾT TOÁN
+               ============================================================== -->
+          <div class="accordion-card" id="acc-income">
+            <button class="accordion-header" onclick="AppController.toggleAccordion('acc-income')">
+              <div class="acc-title-wrap">
+                <span class="acc-step-badge">2</span>
+                <div class="acc-title-text">
+                  <h3>💰 Nhóm 2: Thu Nhập Kỳ Lương & Tiền Nhận Từ Công Việc</h3>
+                  <p>Lương thực nhận, thu ngoài lương, thực nhận từ công việc và dự kiến thu</p>
+                </div>
+              </div>
+              <div class="acc-right-wrap">
+                <span class="acc-summary-pill" id="accSumIncome" style="color:var(--success);">Thực nhận: 0đ</span>
+                <span class="acc-chevron">▾</span>
+              </div>
+            </button>
+            <div class="accordion-body">
+              <div class="kpi-grid-5">
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Tổng lương thực nhận</span><span class="kpi-icon" style="background:var(--success-bg);">💵</span></div>
+                  <div class="kpi-value text-success" id="kpiIncomeSalary">0đ</div>
+                  <div class="kpi-sub"><span>Lương chính trong kỳ</span></div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Thu nhập ngoài lương</span><span class="kpi-icon" style="background:var(--info-bg);">🤝</span></div>
+                  <div class="kpi-value" id="kpiIncomeOther">0đ</div>
+                  <div class="kpi-sub"><span>Hỗ trợ, làm thêm, khác</span></div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Thực nhận từ công việc</span><span class="kpi-icon" style="background:var(--warning-bg);">🛠️</span></div>
+                  <div class="kpi-value text-gold" id="kpiIncomeFromWork">0đ</div>
+                  <div class="kpi-sub"><span>Tạm ứng + Thanh toán CV</span></div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Tổng dự kiến thu</span><span class="kpi-icon" style="background:var(--info-bg);">📈</span></div>
+                  <div class="kpi-value" id="kpiIncomeExpected">0đ</div>
+                  <div class="kpi-sub"><span>Kế hoạch + CV chưa thu</span></div>
+                </div>
+                <div class="kpi-card gold-border">
+                  <div class="kpi-top"><span class="kpi-title">Khoản CV còn phải nhận</span><span class="kpi-icon" style="background:var(--danger-bg);">🎯</span></div>
+                  <div class="kpi-value text-danger" id="kpiIncomeRemainingWork">0đ</div>
+                  <div class="kpi-sub"><span>Được duyệt trừ Đã nhận</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==============================================================
+               MỤC ACCORDION 3: NHÓM 3 - CHI TIÊU & QUỸ TIỀN ĐƯA VỢ
+               ============================================================== -->
+          <div class="accordion-card" id="acc-expense">
+            <button class="accordion-header" onclick="AppController.toggleAccordion('acc-expense')">
+              <div class="acc-title-wrap">
+                <span class="acc-step-badge">3</span>
+                <div class="acc-title-text">
+                  <h3>💸 Nhóm 3: Chi Tiêu & Tiến Độ Quỹ Tiền Đưa Vợ</h3>
+                  <p>Theo dõi định mức tiền đưa vợ, sinh hoạt gia đình và chi tiêu cá nhân</p>
+                </div>
+              </div>
+              <div class="acc-right-wrap">
+                <span class="acc-summary-pill" id="accSumExpense" style="color:var(--wife-pink);">Chi: 0đ • Đưa vợ: 0%</span>
+                <span class="acc-chevron">▾</span>
+              </div>
+            </button>
+            <div class="accordion-body">
+              <div class="kpi-grid-4" style="margin-bottom:14px;">
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Tổng chi tiêu thực tế</span><span class="kpi-icon" style="background:var(--danger-bg);">💸</span></div>
+                  <div class="kpi-value text-danger" id="kpiExpenseTotal">0đ</div>
+                  <div class="kpi-sub"><span>Toàn bộ khoản đã chi</span></div>
+                </div>
+                <div class="kpi-card wife-card">
+                  <div class="kpi-top"><span class="kpi-title">💝 Tiền đưa vợ trong kỳ</span><span class="kpi-icon" style="background:var(--wife-bg);">💝</span></div>
+                  <div class="kpi-value text-wife" id="kpiExpenseWife">0đ</div>
+                  <div class="kpi-sub"><span>Ưu tiên gia đình số 1</span></div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Chi phí sinh hoạt & con cái</span><span class="kpi-icon" style="background:var(--warning-bg);">🏠</span></div>
+                  <div class="kpi-value text-warning" id="kpiExpenseLiving">0đ</div>
+                  <div class="kpi-sub"><span>Ăn uống, điện nước, con cái</span></div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Các khoản chi khác</span><span class="kpi-icon" style="background:var(--info-bg);">⛽</span></div>
+                  <div class="kpi-value" id="kpiExpenseOther">0đ</div>
+                  <div class="kpi-sub"><span>Xăng xe, đi lại, cá nhân</span></div>
+                </div>
+              </div>
+
+              <!-- Thanh tiến độ Đưa vợ tích hợp gọn trong Nhóm 3 -->
+              <div class="panel-card" style="margin-bottom:0;">
+                <div class="panel-header">
+                  <h4>💝 Tiến Độ Định Mức Tiền Đưa Vợ Trong Kỳ</h4>
+                  <button class="btn btn-sm btn-gold" onclick="AppController.openExpenseModal(null, 'Đưa vợ')">+ Ghi nhận Đưa vợ</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;flex-wrap:wrap;gap:6px;">
+                  <div>Đã đưa vợ: <strong style="font-size:17px;color:var(--wife-pink);" id="dashWifePaid">0đ</strong> / Định mức: <strong id="dashWifeTarget">10.000.000đ</strong></div>
+                  <span class="badge badge-wife" id="dashWifePercent">0%</span>
+                </div>
+                <div class="progress-bar-wrap">
+                  <div class="progress-bar-fill" id="dashWifeProgressBar" style="width:0%;background:var(--wife-pink);"></div>
+                </div>
+                <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;" id="dashWifeStatusText">Đang tính toán...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==============================================================
+               MỤC ACCORDION 4: NHÓM 4 - TÀI KHOẢN, NGÂN HÀNG & TIẾT KIỆM
+               ============================================================== -->
+          <div class="accordion-card" id="acc-finance">
+            <button class="accordion-header" onclick="AppController.toggleAccordion('acc-finance')">
+              <div class="acc-title-wrap">
+                <span class="acc-step-badge">4</span>
+                <div class="acc-title-text">
+                  <h3>🏦 Nhóm 4: Số Dư Tiền Mặt, Ngân Hàng & Quỹ Tiết Kiệm</h3>
+                  <p>Số dư thực tế trong ví, MB Bank, Vietcombank, Sổ tiết kiệm và Dự thu/Dự chi</p>
+                </div>
+              </div>
+              <div class="acc-right-wrap">
+                <span class="acc-summary-pill" id="accSumFinance">Mặt+NH: 0đ</span>
+                <span class="acc-chevron">▾</span>
+              </div>
+            </button>
+            <div class="accordion-body">
+              <div class="kpi-grid-5">
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Tổng tiền mặt tại ví</span><span class="kpi-icon" style="background:var(--success-bg);">💵</span></div>
+                  <div class="kpi-value text-success" id="kpiFinCash">0đ</div>
+                  <div class="kpi-sub"><span>Tiền mặt sẵn có</span></div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Tổng tiền Ngân hàng</span><span class="kpi-icon" style="background:var(--info-bg);">🏦</span></div>
+                  <div class="kpi-value" id="kpiFinBank">0đ</div>
+                  <div class="kpi-sub"><span>MB Bank + Vietcombank...</span></div>
+                </div>
+                <div class="kpi-card gold-border">
+                  <div class="kpi-top"><span class="kpi-title">Tổng tiền Tiết kiệm</span><span class="kpi-icon" style="background:var(--warning-bg);">🐷</span></div>
+                  <div class="kpi-value text-gold" id="kpiFinSavings">0đ</div>
+                  <div class="kpi-sub"><span>Quỹ tích lũy dài hạn</span></div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Số dư thanh toán hiện có</span><span class="kpi-icon" style="background:var(--success-bg);">💳</span></div>
+                  <div class="kpi-value" id="kpiFinCurrentBal">0đ</div>
+                  <div class="kpi-sub"><span>Tiền mặt + Ngân hàng</span></div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-top"><span class="kpi-title">Kế hoạch Dự thu / Dự chi</span><span class="kpi-icon" style="background:var(--info-bg);">📅</span></div>
+                  <div style="margin:6px 0;font-size:12.5px;">
+                    <div>Dự thu: <b style="color:var(--success)" id="kpiFinPlanIn">0đ</b></div>
+                    <div>Dự chi: <b style="color:var(--danger)" id="kpiFinPlanOut">0đ</b></div>
+                  </div>
+                  <div class="kpi-sub"><span>Chưa cộng vào số dư thật</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==============================================================
+               MỤC ACCORDION 5: HỆ THỐNG 5 BIỂU ĐỒ PHÂN TÍCH TRỰC QUAN
+               ============================================================== -->
+          <div class="accordion-card" id="acc-charts">
+            <button class="accordion-header" onclick="AppController.toggleAccordion('acc-charts')">
+              <div class="acc-title-wrap">
+                <span class="acc-step-badge">5</span>
+                <div class="acc-title-text">
+                  <h3>📊 Nhóm 5: Biểu Đồ Phân Tích Tài Chính & Công Việc</h3>
+                  <p>5 biểu đồ trực quan: Thu nhập, Chi tiêu, Thu – Chi – Tiết kiệm, Nhóm việc & Số dư</p>
+                </div>
+              </div>
+              <div class="acc-right-wrap">
+                <span class="acc-summary-pill">5 biểu đồ</span>
+                <span class="acc-chevron">▾</span>
+              </div>
+            </button>
+            <div class="accordion-body">
+              <div class="charts-grid-2">
+                <div class="chart-box">
+                  <div class="panel-header"><h4>1. Biểu đồ Thu nhập theo Nguồn</h4></div>
+                  <div id="chartIncomeStructure"></div>
+                </div>
+                <div class="chart-box">
+                  <div class="panel-header"><h4>2. Biểu đồ Chi tiêu theo Nhóm</h4></div>
+                  <div id="chartExpenseByGroup"></div>
+                </div>
+                <div class="chart-box">
+                  <div class="panel-header"><h4>3. Biểu đồ Thu – Chi – Tiết kiệm</h4></div>
+                  <div id="chartCashflowComparison"></div>
+                </div>
+                <div class="chart-box">
+                  <div class="panel-header"><h4>4. Biểu đồ Kinh phí theo Nhóm Công việc</h4></div>
+                  <div id="chartWorkByCategory"></div>
+                </div>
+              </div>
+              <div class="chart-box">
+                <div class="panel-header"><h4>5. Biểu đồ Phân bổ Số dư Tài khoản & Quỹ Tiết kiệm</h4></div>
+                <div id="chartAccountBalances"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==============================================================
+               MỤC ACCORDION 6: CẢNH BÁO & DANH SÁCH CÔNG VIỆC GẦN ĐÂY
+               ============================================================== -->
+          <div class="accordion-card open" id="acc-recent">
+            <button class="accordion-header" onclick="AppController.toggleAccordion('acc-recent')">
+              <div class="acc-title-wrap">
+                <span class="acc-step-badge">6</span>
+                <div class="acc-title-text">
+                  <h3>🔔 Nhóm 6: Cảnh Báo Thông Minh & Công Việc Gần Đây</h3>
+                  <p>Nhắc việc chưa thanh toán, cảnh báo vượt duyệt và danh sách nhiệm vụ mới nhất</p>
+                </div>
+              </div>
+              <div class="acc-right-wrap">
+                <span class="acc-summary-pill" id="accSumAlerts">Đang mở</span>
+                <span class="acc-chevron">▾</span>
+              </div>
+            </button>
+            <div class="accordion-body">
+              <div class="alert-list" id="dashboardSmartAlerts" style="margin-bottom:14px;"></div>
+
+              <div class="panel-card" style="margin-bottom:0;">
+                <div class="panel-header">
+                  <h4>📋 Công Việc & Tình Trạng Thanh Toán Gần Đây</h4>
+                  <button class="btn btn-sm btn-primary" onclick="AppController.switchTab('work')">Xem tất cả công việc →</button>
+                </div>
+                <div class="table-responsive">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Công việc & Thời gian</th>
+                        <th class="text-right">Kinh phí (Duyệt/DK)</th>
+                        <th class="text-right">Đã nhận</th>
+                        <th class="text-right">Còn được nhận</th>
+                        <th class="text-center">Trạng thái</th>
+                        <th class="text-center">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dashboardRecentWorksBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PHÂN HỆ 2: QUẢN LÝ CÔNG VIỆC, TẠM ỨNG & THANH TOÁN
+             ================================================================ -->
+        <section class="tab-pane" id="tab-work">
+          <div class="kpi-grid-5" style="margin-bottom:14px;">
+            <div class="kpi-card"><div class="kpi-title">Tổng số công việc</div><div class="kpi-value" id="workSumCount">0</div></div>
+            <div class="kpi-card"><div class="kpi-title">Tổng dự kiến thu</div><div class="kpi-value" id="workSumExpected">0đ</div></div>
+            <div class="kpi-card"><div class="kpi-title">Tổng được duyệt</div><div class="kpi-value text-gold" id="workSumApproved">0đ</div></div>
+            <div class="kpi-card"><div class="kpi-title">Tổng tiền đã nhận</div><div class="kpi-value text-success" id="workSumReceived">0đ</div></div>
+            <div class="kpi-card gold-border"><div class="kpi-title">Tổng còn được nhận</div><div class="kpi-value text-danger" id="workSumRemaining">0đ</div></div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h4>📋 Danh Sách Nhiệm Vụ & Công Việc (Liên kết Tạm ứng & Quyết toán)</h4>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn btn-gold" onclick="AppController.openWorkModal()">➕ Thêm công việc mới</button>
+                <button class="btn btn-primary" onclick="AppController.openWorkTxModal()">📥 Ghi nhận Tạm ứng / Thanh toán</button>
+              </div>
+            </div>
+
+            <div class="filter-toolbar">
+              <div class="filter-group">
+                <input type="text" id="workSearchInput" class="input-search" placeholder="🔍 Tìm theo tên công việc, người giao, địa điểm, mã CV..." oninput="AppController.updateWorkFilter()" />
+                <select id="workCategoryFilter" class="select-filter" onchange="AppController.updateWorkFilter()">
+                  <option value="ALL">Tất cả nhóm công việc</option>
+                </select>
+                <select id="workStatusFilter" class="select-filter" onchange="AppController.updateWorkFilter()">
+                  <option value="ALL">Tất cả trạng thái</option>
+                  <option value="UNPAID">⏳ Chưa thanh toán đủ (Còn phải thu)</option>
+                  <option value="Chưa thực hiện">Chưa thực hiện</option>
+                  <option value="Đang thực hiện">Đang thực hiện</option>
+                  <option value="Đã hoàn thành">Đã hoàn thành</option>
+                  <option value="Chờ thanh toán">Chờ thanh toán</option>
+                  <option value="Đã thanh toán đủ">Đã thanh toán đủ</option>
+                  <option value="Tạm dừng">Tạm dừng</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Mã CV</th>
+                    <th>Tên công việc & Đơn vị giao</th>
+                    <th>Nhóm việc</th>
+                    <th>Thời gian & Số ngày</th>
+                    <th class="text-right">Dự kiến / Được duyệt</th>
+                    <th class="text-right">Tổng đã nhận</th>
+                    <th class="text-right">Còn được nhận</th>
+                    <th class="text-center">Trạng thái</th>
+                    <th class="text-center">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="workTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h4>🧾 Sổ Chi Tiết Giao Dịch Tạm Ứng, Thanh Toán Bổ Sung & Hoàn Trả</h4>
+              <span style="font-size:11.5px;color:var(--text-muted);">Công thức: Đã nhận = Tạm ứng + Thanh toán bổ sung - Hoàn trả</span>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Ngày GD</th>
+                    <th>Công việc liên kết</th>
+                    <th>Loại giao dịch</th>
+                    <th>Nội dung</th>
+                    <th>Tài khoản nhận/chi</th>
+                    <th class="text-right">Số tiền</th>
+                    <th class="text-center">Xóa</th>
+                  </tr>
+                </thead>
+                <tbody id="workTxHistoryBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PHÂN HỆ 3: QUẢN LÝ THU NHẬP & KỲ LƯƠNG
+             ================================================================ -->
+        <section class="tab-pane" id="tab-income">
+          <div class="smart-alert-item info" style="margin-bottom:14px;">
+            <div>
+              <strong>⚙️ Quy tắc Kỳ lương & Chống tính trùng thu nhập công việc:</strong>
+              <div id="incPeriodRuleInfo" style="margin-top:2px;">Chu kỳ lương tự thiết lập.</div>
+              <div style="font-size:11.5px;color:var(--text-secondary);margin-top:2px;">💡 Các khoản tạm ứng và thanh toán từ Công việc được tự động tổng hợp từ Phân hệ Công việc (không cần nhập lại vào bảng dưới đây để tránh tính trùng).</div>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="AppController.switchTab('settings')">Đổi ngày kỳ lương</button>
+          </div>
+
+          <div class="kpi-grid-4" style="margin-bottom:14px;">
+            <div class="kpi-card"><div class="kpi-title">Lương hằng tháng (Trong kỳ)</div><div class="kpi-value text-success" id="incSumSalary">0đ</div></div>
+            <div class="kpi-card"><div class="kpi-title">Thu nhập ngoài lương (Hỗ trợ/Làm thêm)</div><div class="kpi-value" id="incSumOther">0đ</div></div>
+            <div class="kpi-card"><div class="kpi-title">Tiền nhận từ Công việc (Liên kết tự động)</div><div class="kpi-value text-gold" id="incSumWorkLinked">0đ</div></div>
+            <div class="kpi-card gold-border"><div class="kpi-title">Tổng Thu Thực Nhận Trong Kỳ</div><div class="kpi-value text-success" id="incSumTotalActual">0đ</div></div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h4>💰 Danh Sách Lương & Các Khoản Thu Nhập Ngoài Lương</h4>
+              <button class="btn btn-gold" onclick="AppController.openIncomeModal()">➕ Ghi nhận Lương / Khoản thu mới</button>
+            </div>
+
+            <div class="filter-toolbar">
+              <div class="filter-group">
+                <input type="text" id="incomeSearchInput" class="input-search" placeholder="🔍 Tìm theo nội dung khoản thu, kỳ lương..." oninput="AppController.updateIncomeFilter()" />
+                <select id="incomeTypeFilter" class="select-filter" onchange="AppController.updateIncomeFilter()">
+                  <option value="ALL">Tất cả nguồn thu</option>
+                  <option value="Lương hằng tháng">💰 Lương hằng tháng</option>
+                  <option value="Tiền công">🛠️ Tiền công</option>
+                  <option value="Tiền thù lao">🎖️ Tiền thù lao</option>
+                  <option value="Tiền hỗ trợ">🤝 Tiền hỗ trợ</option>
+                  <option value="Tiền làm thêm">⏱️ Tiền làm thêm</option>
+                  <option value="Thu nhập khác">✨ Thu nhập khác</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Ngày nhận</th>
+                    <th>Nguồn thu</th>
+                    <th>Nội dung chi tiết</th>
+                    <th>Kỳ lương</th>
+                    <th>Tài khoản nhận</th>
+                    <th class="text-right">Số tiền thực nhận</th>
+                    <th class="text-center">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="incomeTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PHÂN HỆ 4: QUẢN LÝ CHI TIÊU CÁ NHÂN & QUỸ ĐƯA VỢ
+             ================================================================ -->
+        <section class="tab-pane" id="tab-expense">
+          <div class="kpi-grid-4" style="margin-bottom:14px;">
+            <div class="kpi-card wife-card"><div class="kpi-title">💝 Đã đưa vợ trong kỳ</div><div class="kpi-value text-wife" id="expWifePaid">0đ</div></div>
+            <div class="kpi-card"><div class="kpi-title">Định mức đưa vợ mỗi kỳ</div><div class="kpi-value" id="expWifeTarget">10.000.000đ</div></div>
+            <div class="kpi-card"><div class="kpi-title">Còn cần đưa vợ thêm</div><div class="kpi-value text-warning" id="expWifeRemaining">0đ</div></div>
+            <div class="kpi-card gold-border"><div class="kpi-title">Tổng chi tiêu thực tế trong kỳ</div><div class="kpi-value text-danger" id="expTotalAll">0đ</div></div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h4>📊 Kiểm Soát Hạn Mức Ngân Sách Chi Tiêu Theo Nhóm</h4>
+              <span style="font-size:11.5px;color:var(--text-muted);">Xanh: An toàn (&lt;80%) • Vàng: Chú ý (80-100%) • Đỏ: Vượt ngân sách (&gt;100%)</span>
+            </div>
+            <div id="expenseBudgetProgressList"></div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h4>💸 Sổ Ghi Chép Chi Tiêu Hằng Ngày & Tiền Đưa Vợ</h4>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn btn-gold" onclick="AppController.openExpenseModal(null, 'Đưa vợ')">💝 Ghi nhận Đưa vợ nhanh</button>
+                <button class="btn btn-primary" onclick="AppController.openExpenseModal()">➕ Thêm khoản chi tiêu</button>
+              </div>
+            </div>
+
+            <div class="filter-toolbar">
+              <div class="filter-group">
+                <input type="text" id="expenseSearchInput" class="input-search" placeholder="🔍 Tìm khoản chi tiêu..." oninput="AppController.updateExpenseFilter()" />
+                <select id="expenseCategoryFilter" class="select-filter" onchange="AppController.updateExpenseFilter()">
+                  <option value="ALL">Tất cả 12 nhóm chi tiêu</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Ngày chi</th>
+                    <th>Nhóm chi tiêu</th>
+                    <th>Nội dung</th>
+                    <th>Tài khoản chi</th>
+                    <th>Hình thức</th>
+                    <th class="text-right">Số tiền</th>
+                    <th class="text-center">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="expenseTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PHÂN HỆ 5: QUẢN LÝ TIỀN MẶT, NGÂN HÀNG & TIẾT KIỆM
+             ================================================================ -->
+        <section class="tab-pane" id="tab-accounts">
+          <div class="panel-header" style="margin-bottom:12px;">
+            <h4>🏦 Danh Sách Tài Khoản Tiền Mặt & Ngân Hàng (Số dư đầu kỳ + Tiền vào - Tiền ra)</h4>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-gold" onclick="AppController.openTransferModal()">🔄 Chuyển tiền nội bộ</button>
+              <button class="btn btn-primary" onclick="AppController.openAccountModal()">➕ Thêm tài khoản</button>
+            </div>
+          </div>
+          <div class="bank-cards-grid" id="accountsCardGrid"></div>
+
+          <div class="panel-header" style="margin:18px 0 12px;">
+            <h4>🐷 Các Mục Tiêu Tích Lũy & Sổ Tiết Kiệm Cá Nhân</h4>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-gold" onclick="AppController.openSavingTxModal(null, 'GUI_TIET_KIEM')">➕ Gửi thêm tiết kiệm</button>
+              <button class="btn btn-primary" onclick="AppController.openSavingGoalModal()">🎯 Tạo mục tiêu tiết kiệm</button>
+            </div>
+          </div>
+          <div class="kpi-grid-4" id="savingsGoalsGrid" style="margin-bottom:16px;"></div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h4>🔄 Lịch Sử Chuyển Tiền Nội Bộ & Giao Dịch Gửi/Rút Tiết Kiệm</h4>
+              <span style="font-size:11.5px;color:var(--success);font-weight:600;">🛡️ Không tính trùng vào Thu nhập hay Chi tiêu tiêu dùng</span>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Ngày chuyển</th>
+                    <th>Loại giao dịch</th>
+                    <th>Từ tài khoản</th>
+                    <th>Đến tài khoản / Quỹ</th>
+                    <th>Nội dung</th>
+                    <th class="text-right">Số tiền</th>
+                    <th class="text-center">Xóa</th>
+                  </tr>
+                </thead>
+                <tbody id="transferTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PHÂN HỆ 6: BÁO CÁO & THỐNG KÊ TỔNG HỢP
+             ================================================================ -->
+        <section class="tab-pane" id="tab-report">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h4>📈 BÁO CÁO TỔNG HỢP CÔNG VIỆC – THU NHẬP – CHI TIÊU – TÀI CHÍNH</h4>
+                <p style="font-size:12px;color:var(--text-secondary);margin-top:3px;" id="repPeriodTitle">Kỳ báo cáo hiện tại</p>
+              </div>
+              <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn btn-gold" onclick="AppController.exportExcelCsv()">📊 Xuất File Excel (.CSV)</button>
+                <button class="btn btn-primary" onclick="window.print()">🖨️ In / Xuất Báo Cáo PDF</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Phân nhóm Báo cáo</th>
+                    <th>Chỉ tiêu thống kê chi tiết</th>
+                    <th class="text-right">Số liệu tổng hợp</th>
+                  </tr>
+                </thead>
+                <tbody id="reportSummaryTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PHÂN HỆ 7: KẾ HOẠCH DỰ THU – DỰ CHI
+             ================================================================ -->
+        <section class="tab-pane" id="tab-plan">
+          <div class="kpi-grid-4" style="margin-bottom:14px;">
+            <div class="kpi-card"><div class="kpi-title">Tổng Dự thu theo kế hoạch</div><div class="kpi-value text-success" id="planSumIncome">0đ</div></div>
+            <div class="kpi-card"><div class="kpi-title">Khoản công việc còn phải thu</div><div class="kpi-value text-gold" id="planSumWorkPending">0đ</div></div>
+            <div class="kpi-card"><div class="kpi-title">Tổng Dự chi theo kế hoạch</div><div class="kpi-value text-danger" id="planSumExpense">0đ</div></div>
+            <div class="kpi-card gold-border"><div class="kpi-title">Số dư dự kiến sau kế hoạch</div><div class="kpi-value" id="planNetBalance">0đ</div></div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h4>📅 Bảng Kế Hoạch Dự Thu – Dự Chi (Chưa cộng vào số dư thực tế)</h4>
+              <button class="btn btn-gold" onclick="AppController.openPlanModal()">➕ Thêm khoản Dự thu / Dự chi</button>
+            </div>
+
+            <div class="filter-toolbar">
+              <div class="filter-group">
+                <select id="planTypeFilter" class="select-filter" onchange="AppController.updatePlanFilter()">
+                  <option value="ALL">Tất cả Dự thu & Dự chi</option>
+                  <option value="DU_THU">📈 Chỉ xem Dự thu</option>
+                  <option value="DU_CHI">📉 Chỉ xem Dự chi</option>
+                </select>
+                <select id="planStatusFilter" class="select-filter" onchange="AppController.updatePlanFilter()">
+                  <option value="ALL">Tất cả trạng thái</option>
+                  <option value="CHO_THUC_HIEN">⏳ Chờ thực hiện</option>
+                  <option value="DA_THUC_HIEN">✅ Đã thực hiện</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Ngày dự kiến</th>
+                    <th>Loại kế hoạch</th>
+                    <th>Hạng mục</th>
+                    <th>Nội dung chi tiết</th>
+                    <th class="text-right">Số tiền dự kiến</th>
+                    <th class="text-center">Trạng thái</th>
+                    <th class="text-center">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="planTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PHÂN HỆ 8: CÀI ĐẶT, DANH MỤC, KỲ LƯƠNG & SAO LƯU
+             ================================================================ -->
+        <section class="tab-pane" id="tab-settings">
+          <div class="highlight-dual-grid">
+            <div class="panel-card">
+              <div class="panel-header">
+                <h4>⚙️ Thiết Lập Kỳ Lương, Định Mức Đưa Vợ & Kết Nối Google Sheets</h4>
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label>Tên chủ sở hữu Sổ tay</label>
+                  <input type="text" id="cfgOwnerName" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label>Chủ đề Phong Thủy Ngũ Hành</label>
+                  <select id="cfgThemeMenh" class="form-control">
+                    <option value="KIM_THUY">🌊 Kim Thủy Tụ Tài (Navy & Vàng Đồng)</option>
+                    <option value="MOC">🌿 Thủy Mộc Sinh Khí (Xanh Ngọc)</option>
+                    <option value="HOA">🔥 Mộc Hỏa Hồng Phát (Đỏ Hoàng Gia)</option>
+                    <option value="THO">⛰️ Hỏa Thổ Vững Bền (Nâu Trầm)</option>
+                    <option value="KIM">🪙 Bạch Kim Thịnh Vượng (Titan)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Ngày bắt đầu Kỳ lương (VD: 13)</label>
+                  <input type="number" id="cfgSalaryStartDay" class="form-control" min="1" max="28" />
+                </div>
+                <div class="form-group">
+                  <label>Ngày nhận lương dự kiến hằng tháng</label>
+                  <input type="number" id="cfgSalaryPayDay" class="form-control" min="1" max="31" />
+                </div>
+                <div class="form-group">
+                  <label>Mức lương cơ bản dự kiến (VND)</label>
+                  <input type="number" id="cfgExpectedSalary" class="form-control" step="100000" />
+                </div>
+                <div class="form-group">
+                  <label>💝 Định mức Tiền Đưa Vợ mỗi kỳ (VND)</label>
+                  <input type="number" id="cfgWifeAllowance" class="form-control" step="500000" />
+                </div>
+                <div class="form-group">
+                  <label>Tổng hạn mức ngân sách chi tiêu kỳ (VND)</label>
+                  <input type="number" id="cfgMonthlyBudget" class="form-control" step="500000" />
+                </div>
+                <div class="form-group">
+                  <label>URL Web App Google Apps Script (Đồng bộ Cloud từ GitHub)</label>
+                  <input type="text" id="cfgGasWebAppUrl" class="form-control" placeholder="https://script.google.com/macros/s/.../exec" />
+                </div>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+                <button class="btn btn-gold" onclick="AppController.saveSettingsConfig()">💾 Lưu Cấu Hình Hệ Thống</button>
+                <button class="btn btn-primary" onclick="PersonalDB.pushAllToCloud(function(ok,m){AppController.showToast(m);})">☁️ Đẩy dữ liệu lên Google Sheets</button>
+                <button class="btn btn-outline" onclick="PersonalDB.fetchFromCloud(function(ok,m){AppController.refreshAllViews();AppController.showToast(m);})">🔄 Tải dữ liệu từ Google Sheets</button>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-header">
+                <h4>🛡️ Trung Tâm Sao Lưu & Khôi Phục An Toàn</h4>
+              </div>
+              <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:14px;">
+                Hệ thống tự động sao lưu hằng ngày trên Google Drive (giữ 30 bản ngày + 12 bản cuối tháng). Ngoài ra bạn có thể xuất tệp sao lưu <code>.JSON</code> về điện thoại/máy tính bất cứ lúc nào.
+              </p>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <button class="btn btn-gold" onclick="AppController.exportBackupJson()">📥 Tải xuống Bản Sao Lưu Toàn Bộ (.JSON)</button>
+                <label class="btn btn-outline" style="cursor:pointer;">
+                  📤 Khôi phục dữ liệu từ Tệp Sao Lưu (.JSON)
+                  <input type="file" accept=".json" style="display:none;" onchange="AppController.handleImportBackupJson(event)" />
+                </label>
+                <button class="btn btn-outline" onclick="if(confirm('Khôi phục lại bộ dữ liệu mẫu ban đầu?')){PersonalDB.resetToSampleData();AppController.refreshAllViews();AppController.showToast('Đã nạp lại dữ liệu mẫu!');}">🌱 Nạp lại Dữ liệu Mẫu để trải nghiệm</button>
+                <button class="btn btn-danger" onclick="if(confirm('Xóa toàn bộ giao dịch mẫu để bắt đầu ghi chép sổ tay mới tinh của bạn? (Vẫn giữ nguyên 30 danh mục và tài khoản)')){PersonalDB.clearAllBusinessData();AppController.refreshAllViews();AppController.showToast('Đã làm sạch giao dịch mẫu, sẵn sàng nhập mới!');}">🧹 Xóa dữ liệu mẫu để bắt đầu nhập thật từ đầu</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h4>🗂️ Quản Lý Danh Mục Hệ Thống (Công việc, Thu nhập, Chi tiêu)</h4>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn btn-sm btn-outline" onclick="AppController.switchCategorySubTab('CONG_VIEC')">📋 11 Nhóm Công việc</button>
+                <button class="btn btn-sm btn-outline" onclick="AppController.switchCategorySubTab('THU_NHAP')">💰 7 Nhóm Thu nhập</button>
+                <button class="btn btn-sm btn-outline" onclick="AppController.switchCategorySubTab('CHI_TIEU')">💸 12 Nhóm Chi tiêu</button>
+                <button class="btn btn-sm btn-gold" onclick="AppController.openCategoryModal()">+ Thêm danh mục</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="text-center">Biểu tượng</th>
+                    <th>Tên danh mục</th>
+                    <th>Phân nhóm</th>
+                    <th class="text-right">Hạn mức ngân sách tháng</th>
+                    <th class="text-center">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="settingsCategoryBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h4>📜 Nhật Ký Thao Tác Hệ Thống (NHAT_KY_HE_THONG)</h4>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Thời gian</th>
+                    <th>Hành động</th>
+                    <th>Phân hệ</th>
+                    <th>Chi tiết thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="systemLogsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       THANH ĐIỀU HƯỚNG DƯỚI CÙNG CHO ĐIỆN THOẠI (MOBILE BOTTOM BAR)
+       ====================================================================== -->
+  <nav class="mobile-bottom-nav">
+    <button class="mobile-nav-btn active" data-tab="dashboard" onclick="AppController.switchTab('dashboard')">
+      <span class="m-icon">📊</span><span>Tổng quan</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="work" onclick="AppController.switchTab('work')">
+      <span class="m-icon">📋</span><span>Công việc</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="income" onclick="AppController.switchTab('income')">
+      <span class="m-icon">💰</span><span>Thu nhập</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="expense" onclick="AppController.switchTab('expense')">
+      <span class="m-icon">💸</span><span>Chi tiêu</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="accounts" onclick="AppController.switchTab('accounts')">
+      <span class="m-icon">🏦</span><span>Tài khoản</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="settings" onclick="AppController.switchTab('settings')">
+      <span class="m-icon">⚙️</span><span>Cài đặt</span>
+    </button>
+  </nav>
+
+  <!-- ======================================================================
+       MODAL BẢNG ĐIỀU KHIỂN NHANH: PHONG THỦY, SÁNG/TỐI, GIẢI THÍCH KỲ LƯƠNG
+       ====================================================================== -->
+  <div class="modal-backdrop" id="modalQuickStyle">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>✨ Tùy Chỉnh Giao Diện Phong Thủy & Kỳ Xem Sổ</h3>
+        <button class="modal-close" onclick="AppController.closeModal('modalQuickStyle')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="smart-alert-item info" style="margin-bottom:14px;">
+          <div>
+            <strong>📆 Giải thích mục "Kỳ xem sổ (Kỳ thống kê)" trên thanh công cụ:</strong>
+            <p style="font-size:12px;margin-top:4px;line-height:1.45;">
+              Trong thực tế, lương và chi tiêu của bạn thường tính theo <b>Kỳ lương</b> (ví dụ từ <b>ngày 13 tháng trước đến ngày 12 tháng này</b>) chứ không cố định từ mùng 1 đến cuối tháng. Bộ chọn Kỳ giúp bạn lọc toàn bộ Thu nhập, Chi tiêu, Tiền đưa vợ theo đúng Kỳ lương hoặc chuyển sang xem theo Tháng, Quý, Năm chỉ với 1 chạm!
+            </p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>1. Chọn Chủ đề Màu sắc Phong Thủy Ngũ Hành (Hợp Mệnh):</label>
+          <select id="topThemeSelect" class="form-control">
+            <option value="KIM_THUY">🌊 Kim Thủy Tụ Tài (Xanh Navy & Vàng Đồng – Mặc định)</option>
+            <option value="MOC">🌿 Thủy Mộc Sinh Khí (Xanh Ngọc Lục Bảo & Vàng Kim)</option>
+            <option value="HOA">🔥 Mộc Hỏa Hồng Phát (Đỏ Rượu Vang Hoàng Gia & Vàng)</option>
+            <option value="THO">⛰️ Hỏa Thổ Vững Bền (Nâu Trầm Hương & Vàng Hoàng Kim)</option>
+            <option value="KIM">🪙 Bạch Kim Thịnh Vượng (Xám Titan & Vàng Ròng)</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-top:12px;">
+          <label>2. Chế độ Hiển thị Ban Ngày / Ban Đêm:</label>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-outline" style="flex:1;" onclick="AppController.setColorMode('light')">☀️ Chế độ Sáng (Minh Đường)</button>
+            <button class="btn btn-primary" style="flex:1;" onclick="AppController.setColorMode('dark')">🌙 Chế độ Tối Hoàng Gia</button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:14px;">
+          <label>3. Kết nối Google Sheets từ GitHub (Dán link Web App Google Apps Script):</label>
+          <div style="display:flex;gap:6px;">
+            <input type="text" id="quickGasUrlInput" class="form-control" placeholder="https://script.google.com/macros/s/.../exec" />
+            <button class="btn btn-gold" onclick="AppController.saveQuickGasUrl()">Kết nối</button>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Khi chạy trên GitHub Pages, dán link Web App vào đây để đồng bộ 2 chiều với Google Sheets mà không bị hiện dòng chữ của Google.</div>
+        </div>
+
+        <div class="form-group" style="margin-top:14px;">
+          <label>4. Sao lưu & Đồng bộ nhanh:</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-gold" onclick="AppController.triggerCloudBackup()">💾 Sao lưu ngay</button>
+            <button class="btn btn-outline" onclick="PersonalDB.fetchFromCloud(function(ok,m){AppController.refreshAllViews();AppController.showToast(m);})">🔄 Tải từ Google Sheets</button>
+            <button class="btn btn-outline" onclick="AppController.closeModal('modalQuickStyle');AppController.switchTab('settings')">⚙️ Mở Cài đặt đầy đủ</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="AppController.closeModal('modalQuickStyle')">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. MODAL THÊM / SỬA CÔNG VIỆC -->
+  <div class="modal-backdrop" id="modalWork">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>📋 Thông Tin Công Việc & Nhiệm Vụ</h3>
+        <button class="modal-close" onclick="AppController.closeModal('modalWork')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="formWorkId" />
+        <div class="form-group">
+          <label>Tên công việc / Nhiệm vụ *</label>
+          <input type="text" id="formWorkName" class="form-control" placeholder="VD: Treo băng rôn tuyên truyền, Phục vụ âm thanh Hội diễn..." />
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Nhóm công việc</label>
+            <select id="formWorkCategory" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label>Trạng thái công việc</label>
+            <select id="formWorkStatus" class="form-control">
+              <option value="Chưa thực hiện">Chưa thực hiện</option>
+              <option value="Đang thực hiện">Đang thực hiện</option>
+              <option value="Đã hoàn thành">Đã hoàn thành</option>
+              <option value="Chờ thanh toán">Chờ thanh toán</option>
+              <option value="Đã thanh toán đủ">Đã thanh toán đủ</option>
+              <option value="Tạm dừng">Tạm dừng</option>
+              <option value="Đã hủy">Đã hủy</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Người giao / Đơn vị giao việc</label>
+            <input type="text" id="formWorkAssigner" class="form-control" placeholder="VD: Trung tâm VH-TT&TT, Phòng Văn hóa..." />
+          </div>
+          <div class="form-group">
+            <label>Địa điểm thực hiện</label>
+            <input type="text" id="formWorkLocation" class="form-control" placeholder="VD: Nhà văn hóa trung tâm, Các tuyến đường..." />
+          </div>
+          <div class="form-group">
+            <label>Ngày bắt đầu</label>
+            <input type="date" id="formWorkStart" class="form-control" onchange="AppController.updateWorkDaysPreview()" />
+          </div>
+          <div class="form-group">
+            <label>Ngày kết thúc</label>
+            <input type="date" id="formWorkEnd" class="form-control" onchange="AppController.updateWorkDaysPreview()" />
+          </div>
+        </div>
+        <div class="smart-alert-item info" style="margin-bottom:12px;">
+          <span>⏱️ Số ngày thực hiện tự tính (Kết thúc - Bắt đầu + 1): <strong id="formWorkDaysCalculated">1 ngày</strong></span>
+        </div>
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label>Dự kiến thu (VND)</label>
+            <input type="number" id="formWorkExpected" class="form-control" placeholder="3000000" step="50000" />
+          </div>
+          <div class="form-group">
+            <label>Số tiền được duyệt (VND)</label>
+            <input type="number" id="formWorkApproved" class="form-control" placeholder="2800000" step="50000" />
+          </div>
+          <div class="form-group">
+            <label>Hạn nhận thanh toán</label>
+            <input type="date" id="formWorkDueDate" class="form-control" />
+          </div>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Số buổi thực tế (nếu có)</label>
+            <input type="text" id="formWorkSessions" class="form-control" placeholder="VD: 3 ngày (6 buổi)" />
+          </div>
+          <div class="form-group">
+            <label>Tài liệu / Chứng từ đính kèm</label>
+            <input type="text" id="formWorkDoc" class="form-control" placeholder="Tên file hoặc đường dẫn Drive" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Nội dung mô tả nhiệm vụ</label>
+          <textarea id="formWorkDesc" class="form-control" rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Ghi chú thêm</label>
+          <input type="text" id="formWorkNote" class="form-control" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalWork')">Hủy</button>
+        <button class="btn btn-gold" onclick="AppController.saveWorkFromModal()">💾 Lưu Công Việc</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. MODAL GHI NHẬN TẠM ỨNG & THANH TOÁN CÔNG VIỆC -->
+  <div class="modal-backdrop" id="modalWorkTx">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>📥 Ghi Nhận Tạm Ứng / Thanh Toán Công Việc</h3>
+        <button class="modal-close" onclick="AppController.closeModal('modalWorkTx')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Chọn Công việc liên kết *</label>
+          <select id="formWorkTxWorkId" class="form-control"></select>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Loại giao dịch công việc</label>
+            <select id="formWorkTxType" class="form-control">
+              <option value="Tạm ứng nhận được">1. Tạm ứng nhận được (+)</option>
+              <option value="Thanh toán bổ sung">2. Thanh toán bổ sung / Quyết toán (+)</option>
+              <option value="Hoàn trả tạm ứng">3. Hoàn trả tạm ứng (-)</option>
+              <option value="Thu hồi tiền tạm ứng">4. Thu hồi tiền tạm ứng (-)</option>
+              <option value="Điều chỉnh quyết toán">5. Điều chỉnh quyết toán (+)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Ngày giao dịch</label>
+            <input type="date" id="formWorkTxDate" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Số tiền (VND) *</label>
+            <input type="number" id="formWorkTxAmount" class="form-control" placeholder="VD: 500000" step="50000" />
+          </div>
+          <div class="form-group">
+            <label>Tài khoản nhận / chi tiền</label>
+            <select id="formWorkTxAccount" class="form-control"></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Nội dung giao dịch</label>
+          <input type="text" id="formWorkTxDesc" class="form-control" placeholder="VD: Tạm ứng lần 1, Thanh toán phần còn lại..." />
+        </div>
+        <div class="form-group">
+          <label>Số chứng từ / Mã giao dịch (nếu có)</label>
+          <input type="text" id="formWorkTxDoc" class="form-control" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalWorkTx')">Hủy</button>
+        <button class="btn btn-gold" onclick="AppController.saveWorkTxFromModal()">💾 Lưu Giao Dịch</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. MODAL XEM CHI TIẾT CÔNG VIỆC -->
+  <div class="modal-backdrop" id="modalWorkDetail">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3>🔍 Chi Tiết Công Việc & Bảng Đối Chiếu Tạm Ứng – Quyết Toán</h3>
+        <button class="modal-close" onclick="AppController.closeModal('modalWorkDetail')">✕</button>
+      </div>
+      <div class="modal-body" id="workDetailModalBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="AppController.closeModal('modalWorkDetail')">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. MODAL THÊM / SỬA THU NHẬP -->
+  <div class="modal-backdrop" id="modalIncome">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>💰 Ghi Nhận Lương & Khoản Thu Nhập</h3>
+        <button class="modal-close" onclick="AppController.closeModal('modalIncome')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="formIncomeId" />
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Ngày thực nhận</label>
+            <input type="date" id="formIncomeDate" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Nguồn thu nhập</label>
+            <select id="formIncomeType" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label>Số tiền thực nhận (VND) *</label>
+            <input type="number" id="formIncomeAmount" class="form-control" placeholder="12500000" step="100000" />
+          </div>
+          <div class="form-group">
+            <label>Tài khoản nhận tiền</label>
+            <select id="formIncomeAccount" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label>Thuộc Kỳ lương</label>
+            <input type="text" id="formIncomePeriod" class="form-control" placeholder="2026-11" />
+          </div>
+          <div class="form-group">
+            <label>Ghi chú</label>
+            <input type="text" id="formIncomeNote" class="form-control" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Nội dung khoản thu</label>
+          <input type="text" id="formIncomeDesc" class="form-control" placeholder="VD: Lương và phụ cấp tháng 11/2026" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalIncome')">Hủy</button>
+        <button class="btn btn-gold" onclick="AppController.saveIncomeFromModal()">💾 Lưu Khoản Thu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. MODAL THÊM / SỬA CHI TIÊU -->
+  <div class="modal-backdrop" id="modalExpense">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>💸 Ghi Nhận Khoản Chi Tiêu / Tiền Đưa Vợ</h3>
+        <button class="modal-close" onclick="AppController.closeModal('modalExpense')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="formExpenseId" />
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Ngày chi</label>
+            <input type="date" id="formExpenseDate" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Nhóm chi tiêu (12 nhóm)</label>
+            <select id="formExpenseCategory" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label>Số tiền chi (VND) *</label>
+            <input type="number" id="formExpenseAmount" class="form-control" placeholder="500000" step="10000" />
+          </div>
+          <div class="form-group">
+            <label>Tài khoản thanh toán</label>
+            <select id="formExpenseAccount" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label>Hình thức thanh toán</label>
+            <select id="formExpenseMethod" class="form-control">
+              <option value="Chuyển khoản">Chuyển khoản ngân hàng</option>
+              <option value="Tiền mặt">Tiền mặt</option>
+              <option value="Quẹt thẻ / QR">Quét mã VietQR</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Ghi chú</label>
+            <input type="text" id="formExpenseNote" class="form-control" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Nội dung chi tiêu</label>
+          <input type="text" id="formExpenseDesc" class="form-control" placeholder="VD: Đưa vợ tiền sinh hoạt kỳ lương tháng 11..." />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalExpense')">Hủy</button>
+        <button class="btn btn-gold" onclick="AppController.saveExpenseFromModal()">💾 Lưu Khoản Chi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. MODAL TÀI KHOẢN -->
+  <div class="modal-backdrop" id="modalAccount">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>🏦 Thông Tin Tài Khoản Tiền Mặt / Ngân Hàng</h3>
+        <button class="modal-close" onclick="AppController.closeModal('modalAccount')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="formAccId" />
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Tên tài khoản *</label>
+            <input type="text" id="formAccName" class="form-control" placeholder="VD: Tài khoản Agribank" />
+          </div>
+          <div class="form-group">
+            <label>Loại tài khoản</label>
+            <select id="formAccType" class="form-control">
+              <option value="NGAN_HANG">Tài khoản Ngân hàng</option>
+              <option value="TIEN_MAT">Tiền mặt tại quỹ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tên ngân hàng</label>
+            <input type="text" id="formAccBank" class="form-control" placeholder="VD: MB Bank, Vietcombank..." />
+          </div>
+          <div class="form-group">
+            <label>Số dư ban đầu (VND)</label>
+            <input type="number" id="formAccInitial" class="form-control" step="100000" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Ghi chú (Không lưu mật khẩu hay OTP)</label>
+          <input type="text" id="formAccNote" class="form-control" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalAccount')">Hủy</button>
+        <button class="btn btn-gold" onclick="AppController.saveAccountFromModal()">💾 Lưu Tài Khoản</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. MODAL CHUYỂN TIỀN NỘI BỘ -->
+  <div class="modal-backdrop" id="modalTransfer">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>🔄 Chuyển Tiền Nội Bộ Giữa Các Tài Khoản</h3>
+        <button class="modal-close" onclick="AppController.closeModal('modalTransfer')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Tài khoản chuyển đi (Nguồn)</label>
+            <select id="formTransferFrom" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label>Tài khoản nhận (Đích)</label>
+            <select id="formTransferTo" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label>Ngày chuyển</label>
+            <input type="date" id="formTransferDate" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Số tiền chuyển (VND) *</label>
+            <input type="number" id="formTransferAmount" class="form-control" step="100000" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Nội dung chuyển tiền</label>
+          <input type="text" id="formTransferDesc" class="form-control" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalTransfer')">Hủy</button>
+        <button class="btn btn-gold" onclick="AppController.saveTransferFromModal()">💾 Thực Hiện Chuyển Tiền</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. MODAL MỤC TIÊU TIẾT KIỆM -->
+  <div class="modal-backdrop" id="modalSavingGoal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>🎯 Thiết Lập Mục Tiêu Tiết Kiệm</h3>
+        <button class="modal-close" onclick="AppController.closeModal('modalSavingGoal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="formSavingId" />
+        <div class="form-group">
+          <label>Tên mục tiêu tiết kiệm *</label>
+          <input type="text" id="formSavingName" class="form-control" placeholder="VD: Quỹ dự phòng gia đình, Mua xe..." />
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Số tiền mục tiêu (VND)</label>
+            <input type="number" id="formSavingTarget" class="form-control" step="1000000" />
+          </div>
+          <div class="form-group">
+            <label>Số tiền đã tích lũy ban đầu (VND)</label>
+            <input type="number" id="formSavingCurrent" class="form-control" step="500000" />
+          </div>
+          <div class="form-group">
+            <label>Nơi gửi / Ngân hàng</label>
+            <input type="text" id="formSavingPlace" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Lãi suất dự kiến (%/năm)</label>
+            <input type="number" id="formSavingRate" class="form-control" step="0.1" />
+          </div>
+          <div class="form-group">
+            <label>Thời hạn hoàn thành</label>
+            <input type="date" id="formSavingDeadline" class="form-control" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalSavingGoal')">Hủy</button>
+        <button class="btn btn-gold" onclick="AppController.saveSavingGoalFromModal()">💾 Lưu Mục Tiêu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. MODAL GỬI / RÚT TIẾT KIỆM -->
+  <div class="modal-backdrop" id="modalSavingTx">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>🐷 Ghi Nhận Gửi Thêm Hoặc Rút Tiền Tiết Kiệm</h3>
+        <button class="modal-close" onclick="AppController.closeModal('modalSavingTx')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Chọn Mục tiêu / Sổ tiết kiệm</label>
+          <select id="formSavingTxGoalId" class="form-control"></select>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Loại giao dịch</label>
+            <select id="formSavingTxType" class="form-control">
+              <option value="GUI_TIET_KIEM">➕ Gửi thêm vào Tiết kiệm (Trích từ TK)</option>
+              <option value="RUT_TIET_KIEM">➖ Rút Tiết kiệm về Tài khoản</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tài khoản nguồn / nhận</label>
+            <select id="formSavingTxAccount" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label>Ngày thực hiện</label>
+            <input type="date" id="formSavingTxDate" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Số tiền (VND) *</label>
+            <input type="number" id="formSavingTxAmount" class="form-control" step="500000" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Ghi chú</label>
+          <input type="text" id="formSavingTxNote" class="form-control" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalSavingTx')">Hủy</button>
+        <button class="btn btn-gold" onclick="AppController.saveSavingTxFromModal()">💾 Xác Nhận</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. MODAL KẾ HOẠCH DỰ THU - DỰ CHI -->
+  <div class="modal-backdrop" id="modalPlan">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>📅 Lập Kế Hoạch Dự Thu – Dự Chi</h3>
+        <button class="modal-close" onclick="AppController.closeModal('modalPlan')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="formPlanId" />
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Loại kế hoạch</label>
+            <select id="formPlanType" class="form-control">
+              <option value="DU_THU">📈 Khoản Dự thu</option>
+              <option value="DU_CHI">📉 Khoản Dự chi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Ngày dự kiến phát sinh</label>
+            <input type="date" id="formPlanDate" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Nhóm hạng mục</label>
+            <input type="text" id="formPlanCategory" class="form-control" placeholder="VD: Đưa vợ, Lương, Tiền thù lao..." />
+          </div>
+          <div class="form-group">
+            <label>Số tiền dự kiến (VND) *</label>
+            <input type="number" id="formPlanAmount" class="form-control" step="100000" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Nội dung chi tiết</label>
+          <input type="text" id="formPlanDesc" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Ghi chú</label>
+          <input type="text" id="formPlanNote" class="form-control" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalPlan')">Hủy</button>
+        <button class="btn btn-gold" onclick="AppController.savePlanFromModal()">💾 Lưu Kế Hoạch</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. MODAL DANH MỤC -->
+  <div class="modal-backdrop" id="modalCategory">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>🗂️ Thêm / Chỉnh Sửa Danh Mục</h3>
+        <button class="modal-close" onclick="AppController.closeModal('modalCategory')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="formCatId" />
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Phân nhóm danh mục</label>
+            <select id="formCatType" class="form-control">
+              <option value="CONG_VIEC">Danh mục Công việc</option>
+              <option value="THU_NHAP">Danh mục Thu nhập</option>
+              <option value="CHI_TIEU">Danh mục Chi tiêu</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Biểu tượng (Emoji)</label>
+            <input type="text" id="formCatIcon" class="form-control" placeholder="📌" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Tên danh mục *</label>
+          <input type="text" id="formCatName" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Hạn mức ngân sách tháng (VND - dành cho nhóm Chi tiêu)</label>
+          <input type="number" id="formCatLimit" class="form-control" step="100000" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalCategory')">Hủy</button>
+        <button class="btn btn-gold" onclick="AppController.saveCategoryFromModal()">💾 Lưu Danh Mục</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="./js/lunar-fengshui.js"></script>
+  <script src="./js/database.js"></script>
+  <script src="./js/accounting.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>

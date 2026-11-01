@@ -1,0 +1,10 @@
+{
+  "name": "SỔ TAY CÁ NHÂN - Quản Lý Công Việc & Tài Chính Phong Thủy",
+  "short_name": "Sổ Tay Cá Nhân",
+  "description": "Hệ thống Quản lý Công việc, Tạm ứng, Thu nhập, Kỳ lương, Chi tiêu, Tiền đưa vợ & Tiết kiệm",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#091724",
+  "theme_color": "#0F2537",
+  "lang": "vi-VN"
+}
