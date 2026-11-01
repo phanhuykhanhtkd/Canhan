@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Sổ Tay Cá Nhân" />
   <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="theme-color" content="#0F2537" />
+  <meta name="theme-color" content="#0A1929" />
   <title>SỔ TAY CÁ NHÂN | Quản Lý Công Việc – Tài Chính – Tiết Kiệm</title>
   <link rel="manifest" href="./manifest.json" />
   <link rel="stylesheet" href="./css/style.css" />
@@ -18,12 +18,12 @@
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="AppController.toggleMobileSidebar(false)"></div>
 
     <!-- ====================================================================
-         THANH ĐIỀU HƯỚNG BÊN TRÁI (SIDEBAR)
+         THANH ĐIỀU HƯỚNG BÊN TRÁI (SIDEBAR HOÀNG GIA)
          ==================================================================== -->
     <aside class="sidebar" id="appSidebar">
       <div class="sidebar-brand">
         <div class="brand-emblem">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#091724" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#07111E" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
           </svg>
         </div>
@@ -35,8 +35,7 @@
 
       <div class="sidebar-wealth-box">
         <div class="wealth-label">
-          <span>TỔNG TÀI SẢN TIỀN</span>
-          <span>VND</span>
+          <span>✦ TỔNG TÀI SẢN TIỀN HIỆN CÓ</span>
         </div>
         <div class="wealth-value" id="sidebarTotalAssets">0đ</div>
         <div class="wealth-sub" id="sidebarPeriodLabel">Kỳ lương hiện tại</div>
@@ -83,7 +82,7 @@
 
       <div class="sidebar-footer">
         <div>🛡️ Hạch toán chuẩn • Không tính trùng</div>
-        <div style="margin-top:3px;color:var(--gold-400);">Phiên bản 2.5 Luxury • Kim Thủy Tụ Tài</div>
+        <div style="margin-top:4px;color:var(--gold-400);font-weight:700;">Phiên bản 3.0 Royal • Kim Thủy Tụ Tài</div>
       </div>
     </aside>
 
@@ -91,26 +90,48 @@
          KHU VỰC CHÍNH (MAIN WRAPPER)
          ==================================================================== -->
     <div class="main-wrapper">
-      <!-- TOPBAR SIÊU TINH GỌN 1 HÀNG -->
+      <!-- TOPBAR HOÀNG GIA 2 TẦNG CÂN ĐỐI - CHỐNG TRÀN TAI THỎ ĐIỆN THOẠI -->
       <header class="topbar">
-        <div class="topbar-left">
-          <button class="mobile-menu-btn" onclick="AppController.toggleMobileSidebar()" title="Mở menu">☰</button>
+        <!-- Tầng 1: Nút Menu + Tiêu đề căn giữa + Nút Sáng/Tối & Phong Thủy -->
+        <div class="topbar-main-row">
+          <div class="topbar-left">
+            <button class="mobile-menu-btn" onclick="AppController.toggleMobileSidebar()" title="Mở danh mục phân hệ" aria-label="Menu">☰</button>
+          </div>
+
           <div class="page-title-group">
+            <span class="app-mini-brand">✦ SỔ TAY CÁ NHÂN • KIM THỦY TỤ TÀI</span>
             <h2 id="currentPageTitle">Tổng Quan Công Việc & Tài Chính</h2>
-            <div class="lunar-fengshui-bar">
-              <span id="lunarDateText">Chủ Nhật, 01/11/2026</span>
-              <span>•</span>
-              <span id="fengShuiElementPill" style="color:var(--gold-600);font-weight:700;">Kim sinh Thủy</span>
-            </div>
+          </div>
+
+          <div class="topbar-right-actions">
+            <!-- Nút Bật Sáng / Tối (Light / Dark Mode) -->
+            <button class="icon-action-btn" id="btnToggleColorMode" onclick="AppController.toggleColorMode()" title="Chuyển chế độ Sáng / Tối">
+              <span id="colorModeIcon">🌙</span>
+              <span class="btn-label-desktop" id="colorModeLabel">Tối</span>
+            </button>
+
+            <!-- Nút mở hộp Phong Thủy & Sao lưu tinh gọn -->
+            <button class="icon-action-btn gold-btn" onclick="AppController.openModal('modalQuickStyle')" title="Tùy chỉnh Phong thủy, Giải thích Kỳ lương & Sao lưu">
+              <span>✨</span>
+              <span class="btn-label-desktop">Phong thủy</span>
+            </button>
           </div>
         </div>
 
-        <div class="topbar-controls">
+        <!-- Tầng 2: Lịch Âm Dương Can Chi & Bộ chọn Kỳ xem sổ căn giữa hài hòa -->
+        <div class="topbar-sub-row">
+          <div class="lunar-fengshui-bar">
+            <span>📅</span>
+            <span id="lunarDateText">Chủ Nhật, 01/11/2026 • Ngày Kỷ Mão</span>
+            <span>•</span>
+            <span id="fengShuiElementPill" style="color:var(--gold-300);font-weight:800;">✦ Kim sinh Thủy</span>
+          </div>
+
           <!-- Bộ chọn Kỳ xem sổ tinh gọn -->
           <div class="compact-period-pill" title="Chọn kỳ xem số liệu (Kỳ lương / Tháng / Quý / Năm)">
             <span class="period-icon">📆</span>
             <select id="topPeriodSelect" class="period-select">
-              <option value="KY_LUONG">Kỳ lương (13/10→12/11)</option>
+              <option value="KY_LUONG">Kỳ lương (13/10 → 12/11)</option>
               <option value="THANG_NAY">Tháng này (11/2026)</option>
               <option value="THANG_TRUOC">Tháng trước (10/2026)</option>
               <option value="QUY_NAY">Quý 4 / 2026</option>
@@ -119,18 +140,6 @@
               <option value="TUY_CHON">Chọn ngày cụ thể...</option>
             </select>
           </div>
-
-          <!-- Nút Bật Sáng / Tối (Light / Dark Mode) -->
-          <button class="icon-action-btn" id="btnToggleColorMode" onclick="AppController.toggleColorMode()" title="Chuyển chế độ Sáng / Tối">
-            <span id="colorModeIcon">🌙</span>
-            <span class="btn-label-desktop" id="colorModeLabel">Tối</span>
-          </button>
-
-          <!-- Nút mở hộp Phong Thủy & Sao lưu tinh gọn -->
-          <button class="icon-action-btn gold-btn" onclick="AppController.openModal('modalQuickStyle')" title="Tùy chỉnh Phong thủy, Giải thích Kỳ lương & Sao lưu">
-            <span>✨</span>
-            <span class="btn-label-desktop">Phong thủy & Sao lưu</span>
-          </button>
         </div>
       </header>
 
@@ -140,65 +149,68 @@
         <input type="date" id="customStartInput" value="2026-10-13" />
         <span>Đến ngày:</span>
         <input type="date" id="customEndInput" value="2026-11-12" />
-        <button class="btn btn-sm btn-primary" id="btnApplyCustomDate">Áp dụng lọc</button>
+        <button class="btn btn-sm btn-gold" id="btnApplyCustomDate">Áp dụng lọc</button>
       </div>
 
       <!-- ==================================================================
-           NỘI DUNG CÁC PHÂN HỆ (MINH ĐƯỜNG TỤ KHÍ)
+           NỘI DUNG CÁC PHÂN HỆ (MINH ĐƯỜNG TỤ KHÍ - CĂN GIỮA CÂN XỨNG)
            ================================================================== -->
       <main class="content-container">
 
         <!-- ================================================================
-             PHÂN HỆ 1: TỔNG QUAN – DASHBOARD (CÓ THU GỌN / MỞ RỘNG TỪNG NHÓM)
+             PHÂN HỆ 1: TỔNG QUAN – DASHBOARD
              ================================================================ -->
         <section class="tab-pane active" id="tab-dashboard">
-          <!-- HERO BANNER TÀI SẢN & THAO TÁC NHANH -->
+          <!-- HERO BANNER TÀI SẢN & THAO TÁC NHANH (CĂN GIỮA HOÀNG GIA) -->
           <div class="hero-prosperity-banner">
             <div class="hero-top-row">
               <div class="hero-greeting">
                 <div class="hero-badges-row">
                   <span class="badge badge-gold" id="dashboardPeriodBadge">Kỳ lương 13/10 – 12/11/2026</span>
-                  <button class="btn btn-sm" style="background:rgba(255,255,255,0.12);color:#FFF;padding:2px 8px;font-size:10.5px;" onclick="AppController.openModal('modalQuickStyle')">❓ Kỳ lương là gì?</button>
+                  <button class="btn btn-sm" style="background:rgba(255,255,255,0.12);color:#FFF;padding:4px 11px;font-size:11px;border:1px solid rgba(255,255,255,0.2);" onclick="AppController.openModal('modalQuickStyle')">❓ Kỳ lương là gì?</button>
+                  <button class="btn btn-sm btn-gold" id="btnHeroSeedSample" style="padding:4px 11px;font-size:11px;display:none;" onclick="AppController.seedSampleDataNow()">🌱 Nạp dữ liệu mẫu</button>
                 </div>
                 <h3 id="heroGreetingTitle">✦ KIM THỦY TƯƠNG SINH – TỤ TÀI VƯỢNG LỘC</h3>
                 <p id="heroGreetingSub">Minh đường sáng sủa, sổ sách phân minh, tiền tài tụ hội vững bền.</p>
               </div>
+
+              <!-- Khung Tổng Tài Sản Hiện Có căn giữa nổi bật -->
               <div class="hero-networth-pill">
-                <span>Tổng Tài Sản Tiền Hiện Có (Mặt + NH + Tiết Kiệm)</span>
+                <span>✦ TỔNG TÀI SẢN TIỀN HIỆN CÓ (MẶT + NGÂN HÀNG + TIẾT KIỆM)</span>
                 <strong id="heroTotalAssets">0đ</strong>
               </div>
             </div>
 
-            <!-- 3 Chỉ số tóm tắt nhanh luôn hiển thị gọn gàng -->
+            <!-- 3 Chỉ số tóm tắt nhanh CÂN XỨNG TUYỆT ĐỐI (Không rớt dòng lệch) -->
             <div class="hero-mini-stats">
               <div class="hero-mini-item">
-                <div class="hm-label">Tổng thu thực nhận</div>
-                <div class="hm-val" style="color:#6EE7B7;" id="heroMiniIncome">0đ</div>
+                <div class="hm-label">Thu thực nhận</div>
+                <div class="hm-val" style="color:#6EE7B7;" id="heroMiniIncome">+0đ</div>
               </div>
               <div class="hero-mini-item">
-                <div class="hm-label">Tổng chi (Gồm đưa vợ)</div>
-                <div class="hm-val" style="color:#FDA4AF;" id="heroMiniExpense">0đ</div>
+                <div class="hm-label">Tổng chi tiêu</div>
+                <div class="hm-val" style="color:#FDA4AF;" id="heroMiniExpense">-0đ</div>
               </div>
               <div class="hero-mini-item">
-                <div class="hm-label">CV còn phải nhận</div>
+                <div class="hm-label">CV còn phải thu</div>
                 <div class="hm-val" style="color:var(--gold-300);" id="heroMiniPendingWork">0đ</div>
               </div>
             </div>
 
-            <!-- Thanh tiêu đề nhỏ đóng/mở 8 nút thao tác nhanh -->
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.12);">
-              <span style="font-size:11.5px;color:var(--gold-300);font-weight:700;">⚡ THAO TÁC NHẬP NHANH 1 CHẠM</span>
-              <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#FFF;padding:3px 9px;font-size:11px;" onclick="AppController.toggleQuickActions()" id="btnToggleQuickActions">Thu gọn ▴</button>
+            <!-- Thanh tiêu đề đóng/mở 8 nút thao tác nhanh -->
+            <div class="quick-actions-header">
+              <span>⚡ THAO TÁC NHẬP NHANH 1 CHẠM</span>
+              <button class="btn btn-sm" style="background:rgba(255,255,255,0.12);color:#FFF;padding:4px 12px;font-size:11px;border:1px solid rgba(255,255,255,0.18);" onclick="AppController.toggleQuickActions()" id="btnToggleQuickActions">Thu gọn ▴</button>
             </div>
 
-            <!-- 8 Nút Thao tác nhanh -->
+            <!-- 8 Nút Thao tác nhanh Bo Góc Cân Xứng -->
             <div class="quick-actions-bar" id="heroQuickActionsBar">
               <button class="quick-btn gold-highlight" onclick="AppController.openWorkModal()">➕ 1. Thêm việc</button>
               <button class="quick-btn" onclick="AppController.openWorkTxModal(null, 'Tạm ứng nhận được')">📥 2. Tạm ứng CV</button>
               <button class="quick-btn" onclick="AppController.openWorkTxModal(null, 'Thanh toán bổ sung')">✅ 3. Thanh toán CV</button>
               <button class="quick-btn" onclick="AppController.openIncomeModal()">💰 4. Thêm khoản thu</button>
               <button class="quick-btn" onclick="AppController.openExpenseModal()">💸 5. Thêm khoản chi</button>
-              <button class="quick-btn" style="border-color:#FDA4AF;color:#FFE4E6;" onclick="AppController.openExpenseModal(null, 'Đưa vợ')">💝 6. Đưa vợ nhanh</button>
+              <button class="quick-btn wife-highlight" onclick="AppController.openExpenseModal(null, 'Đưa vợ')">💝 6. Đưa vợ nhanh</button>
               <button class="quick-btn" onclick="AppController.openTransferModal()">🔄 7. Chuyển tiền</button>
               <button class="quick-btn" onclick="AppController.openSavingTxModal(null, 'GUI_TIET_KIEM')">🐷 8. Gửi tiết kiệm</button>
             </div>
@@ -207,9 +219,9 @@
           <!-- Thanh điều khiển Mở tất cả / Thu gọn tất cả các Nhóm -->
           <div class="dashboard-toolbar-row">
             <span class="toolbar-hint">💡 Ấn vào từng mục dưới đây để mở xem chi tiết hoặc thu gọn:</span>
-            <div style="display:flex;gap:6px;">
-              <button class="btn btn-sm btn-outline" onclick="AppController.setAllAccordions(true)">Mở tất cả</button>
-              <button class="btn btn-sm btn-outline" onclick="AppController.setAllAccordions(false)">Thu gọn tất cả</button>
+            <div class="toolbar-actions">
+              <button class="btn btn-sm btn-outline" onclick="AppController.setAllAccordions(true)">📂 Mở tất cả</button>
+              <button class="btn btn-sm btn-outline" onclick="AppController.setAllAccordions(false)">📁 Thu gọn tất cả</button>
             </div>
           </div>
 
@@ -221,39 +233,41 @@
               <div class="acc-title-wrap">
                 <span class="acc-step-badge">1</span>
                 <div class="acc-title-text">
-                  <h3>📋 Nhóm 1: Công Việc & Khoản Tiền Còn Phải Nhận</h3>
-                  <p>Theo dõi tổng số việc, việc đang làm, hoàn thành và công nợ chưa thanh toán</p>
+                  <h3>📋 Nhóm 1: Công Việc & Khoản Phải Thu</h3>
+                  <p>Theo dõi tổng số việc, việc đang làm, hoàn thành và khoản tiền còn được nhận</p>
+                  <div class="acc-meta-row">
+                    <span class="acc-summary-pill" id="accSumWork">0 việc • Còn thu: 0đ</span>
+                  </div>
                 </div>
               </div>
               <div class="acc-right-wrap">
-                <span class="acc-summary-pill" id="accSumWork">0 việc • Còn thu: 0đ</span>
                 <span class="acc-chevron">▾</span>
               </div>
             </button>
             <div class="accordion-body">
               <div class="kpi-grid-5">
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Tổng số công việc</span><span class="kpi-icon" style="background:var(--info-bg);">📋</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--info-bg);">📋</span><span class="kpi-title">Tổng số công việc</span></div>
                   <div class="kpi-value" id="kpiWorkTotal">0 việc</div>
                   <div class="kpi-sub"><span>Toàn bộ nhiệm vụ</span></div>
                 </div>
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Đang thực hiện</span><span class="kpi-icon" style="background:var(--warning-bg);">⚡</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--warning-bg);">⚡</span><span class="kpi-title">Đang thực hiện</span></div>
                   <div class="kpi-value text-warning" id="kpiWorkInProgress">0 việc</div>
                   <div class="kpi-sub"><span>Đang triển khai</span></div>
                 </div>
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Đã hoàn thành</span><span class="kpi-icon" style="background:var(--success-bg);">✅</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--success-bg);">✅</span><span class="kpi-title">Đã hoàn thành</span></div>
                   <div class="kpi-value text-success" id="kpiWorkCompleted">0 việc</div>
                   <div class="kpi-sub"><span>Đã xong nhiệm vụ</span></div>
                 </div>
                 <div class="kpi-card gold-border">
-                  <div class="kpi-top"><span class="kpi-title">Chưa thanh toán đủ</span><span class="kpi-icon" style="background:var(--danger-bg);">⏳</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--danger-bg);">⏳</span><span class="kpi-title">Chưa thanh toán đủ</span></div>
                   <div class="kpi-value text-danger" id="kpiWorkUnpaid">0 việc</div>
-                  <div class="kpi-sub"><span id="kpiWorkRemainingMoney">Còn phải thu: 0đ</span></div>
+                  <div class="kpi-sub"><span id="kpiWorkRemainingMoney">Còn thu: 0đ</span></div>
                 </div>
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Sắp đến hạn nhận tiền</span><span class="kpi-icon" style="background:var(--warning-bg);">🔔</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--warning-bg);">🔔</span><span class="kpi-title">Sắp đến hạn nhận</span></div>
                   <div class="kpi-value text-gold" id="kpiWorkDueSoon">0 việc</div>
                   <div class="kpi-sub"><span>Trong vòng 10 ngày</span></div>
                 </div>
@@ -269,39 +283,41 @@
               <div class="acc-title-wrap">
                 <span class="acc-step-badge">2</span>
                 <div class="acc-title-text">
-                  <h3>💰 Nhóm 2: Thu Nhập Kỳ Lương & Tiền Nhận Từ Công Việc</h3>
+                  <h3>💰 Nhóm 2: Thu Nhập Kỳ Lương & Công Việc</h3>
                   <p>Lương thực nhận, thu ngoài lương, thực nhận từ công việc và dự kiến thu</p>
+                  <div class="acc-meta-row">
+                    <span class="acc-summary-pill" id="accSumIncome" style="color:var(--success);">Thực nhận: 0đ</span>
+                  </div>
                 </div>
               </div>
               <div class="acc-right-wrap">
-                <span class="acc-summary-pill" id="accSumIncome" style="color:var(--success);">Thực nhận: 0đ</span>
                 <span class="acc-chevron">▾</span>
               </div>
             </button>
             <div class="accordion-body">
               <div class="kpi-grid-5">
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Tổng lương thực nhận</span><span class="kpi-icon" style="background:var(--success-bg);">💵</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--success-bg);">💵</span><span class="kpi-title">Tổng lương thực nhận</span></div>
                   <div class="kpi-value text-success" id="kpiIncomeSalary">0đ</div>
                   <div class="kpi-sub"><span>Lương chính trong kỳ</span></div>
                 </div>
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Thu nhập ngoài lương</span><span class="kpi-icon" style="background:var(--info-bg);">🤝</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--info-bg);">🤝</span><span class="kpi-title">Thu nhập ngoài lương</span></div>
                   <div class="kpi-value" id="kpiIncomeOther">0đ</div>
                   <div class="kpi-sub"><span>Hỗ trợ, làm thêm, khác</span></div>
                 </div>
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Thực nhận từ công việc</span><span class="kpi-icon" style="background:var(--warning-bg);">🛠️</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--warning-bg);">🛠️</span><span class="kpi-title">Thực nhận từ Công việc</span></div>
                   <div class="kpi-value text-gold" id="kpiIncomeFromWork">0đ</div>
                   <div class="kpi-sub"><span>Tạm ứng + Thanh toán CV</span></div>
                 </div>
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Tổng dự kiến thu</span><span class="kpi-icon" style="background:var(--info-bg);">📈</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--info-bg);">📈</span><span class="kpi-title">Tổng dự kiến thu</span></div>
                   <div class="kpi-value" id="kpiIncomeExpected">0đ</div>
                   <div class="kpi-sub"><span>Kế hoạch + CV chưa thu</span></div>
                 </div>
                 <div class="kpi-card gold-border">
-                  <div class="kpi-top"><span class="kpi-title">Khoản CV còn phải nhận</span><span class="kpi-icon" style="background:var(--danger-bg);">🎯</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--danger-bg);">🎯</span><span class="kpi-title">Khoản CV còn phải nhận</span></div>
                   <div class="kpi-value text-danger" id="kpiIncomeRemainingWork">0đ</div>
                   <div class="kpi-sub"><span>Được duyệt trừ Đã nhận</span></div>
                 </div>
@@ -317,34 +333,36 @@
               <div class="acc-title-wrap">
                 <span class="acc-step-badge">3</span>
                 <div class="acc-title-text">
-                  <h3>💸 Nhóm 3: Chi Tiêu & Tiến Độ Quỹ Tiền Đưa Vợ</h3>
+                  <h3>💸 Nhóm 3: Chi Tiêu & Quỹ Tiền Đưa Vợ</h3>
                   <p>Theo dõi định mức tiền đưa vợ, sinh hoạt gia đình và chi tiêu cá nhân</p>
+                  <div class="acc-meta-row">
+                    <span class="acc-summary-pill" id="accSumExpense" style="color:var(--wife-pink);">Chi: 0đ • Đưa vợ: 0%</span>
+                  </div>
                 </div>
               </div>
               <div class="acc-right-wrap">
-                <span class="acc-summary-pill" id="accSumExpense" style="color:var(--wife-pink);">Chi: 0đ • Đưa vợ: 0%</span>
                 <span class="acc-chevron">▾</span>
               </div>
             </button>
             <div class="accordion-body">
               <div class="kpi-grid-4" style="margin-bottom:14px;">
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Tổng chi tiêu thực tế</span><span class="kpi-icon" style="background:var(--danger-bg);">💸</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--danger-bg);">💸</span><span class="kpi-title">Tổng chi tiêu thực tế</span></div>
                   <div class="kpi-value text-danger" id="kpiExpenseTotal">0đ</div>
                   <div class="kpi-sub"><span>Toàn bộ khoản đã chi</span></div>
                 </div>
                 <div class="kpi-card wife-card">
-                  <div class="kpi-top"><span class="kpi-title">💝 Tiền đưa vợ trong kỳ</span><span class="kpi-icon" style="background:var(--wife-bg);">💝</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--wife-bg);">💝</span><span class="kpi-title">Tiền đưa vợ trong kỳ</span></div>
                   <div class="kpi-value text-wife" id="kpiExpenseWife">0đ</div>
                   <div class="kpi-sub"><span>Ưu tiên gia đình số 1</span></div>
                 </div>
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Chi phí sinh hoạt & con cái</span><span class="kpi-icon" style="background:var(--warning-bg);">🏠</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--warning-bg);">🏠</span><span class="kpi-title">Sinh hoạt & Con cái</span></div>
                   <div class="kpi-value text-warning" id="kpiExpenseLiving">0đ</div>
-                  <div class="kpi-sub"><span>Ăn uống, điện nước, con cái</span></div>
+                  <div class="kpi-sub"><span>Ăn uống, điện nước, học tập</span></div>
                 </div>
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Các khoản chi khác</span><span class="kpi-icon" style="background:var(--info-bg);">⛽</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--info-bg);">⛽</span><span class="kpi-title">Các khoản chi khác</span></div>
                   <div class="kpi-value" id="kpiExpenseOther">0đ</div>
                   <div class="kpi-sub"><span>Xăng xe, đi lại, cá nhân</span></div>
                 </div>
@@ -356,14 +374,14 @@
                   <h4>💝 Tiến Độ Định Mức Tiền Đưa Vợ Trong Kỳ</h4>
                   <button class="btn btn-sm btn-gold" onclick="AppController.openExpenseModal(null, 'Đưa vợ')">+ Ghi nhận Đưa vợ</button>
                 </div>
-                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;flex-wrap:wrap;gap:6px;">
-                  <div>Đã đưa vợ: <strong style="font-size:17px;color:var(--wife-pink);" id="dashWifePaid">0đ</strong> / Định mức: <strong id="dashWifeTarget">10.000.000đ</strong></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+                  <div style="font-size:13px;">Đã đưa vợ: <strong style="font-size:17px;color:var(--wife-pink);" id="dashWifePaid">0đ</strong> / Định mức: <strong id="dashWifeTarget">10.000.000đ</strong></div>
                   <span class="badge badge-wife" id="dashWifePercent">0%</span>
                 </div>
                 <div class="progress-bar-wrap">
                   <div class="progress-bar-fill" id="dashWifeProgressBar" style="width:0%;background:var(--wife-pink);"></div>
                 </div>
-                <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;" id="dashWifeStatusText">Đang tính toán...</div>
+                <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;text-align:center;font-weight:600;" id="dashWifeStatusText">Đang tính toán...</div>
               </div>
             </div>
           </div>
@@ -376,44 +394,46 @@
               <div class="acc-title-wrap">
                 <span class="acc-step-badge">4</span>
                 <div class="acc-title-text">
-                  <h3>🏦 Nhóm 4: Số Dư Tiền Mặt, Ngân Hàng & Quỹ Tiết Kiệm</h3>
+                  <h3>🏦 Nhóm 4: Tiền Mặt, Ngân Hàng & Tiết Kiệm</h3>
                   <p>Số dư thực tế trong ví, MB Bank, Vietcombank, Sổ tiết kiệm và Dự thu/Dự chi</p>
+                  <div class="acc-meta-row">
+                    <span class="acc-summary-pill" id="accSumFinance">Mặt+NH: 0đ</span>
+                  </div>
                 </div>
               </div>
               <div class="acc-right-wrap">
-                <span class="acc-summary-pill" id="accSumFinance">Mặt+NH: 0đ</span>
                 <span class="acc-chevron">▾</span>
               </div>
             </button>
             <div class="accordion-body">
               <div class="kpi-grid-5">
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Tổng tiền mặt tại ví</span><span class="kpi-icon" style="background:var(--success-bg);">💵</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--success-bg);">💵</span><span class="kpi-title">Tổng tiền mặt tại ví</span></div>
                   <div class="kpi-value text-success" id="kpiFinCash">0đ</div>
                   <div class="kpi-sub"><span>Tiền mặt sẵn có</span></div>
                 </div>
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Tổng tiền Ngân hàng</span><span class="kpi-icon" style="background:var(--info-bg);">🏦</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--info-bg);">🏦</span><span class="kpi-title">Tổng tiền Ngân hàng</span></div>
                   <div class="kpi-value" id="kpiFinBank">0đ</div>
                   <div class="kpi-sub"><span>MB Bank + Vietcombank...</span></div>
                 </div>
                 <div class="kpi-card gold-border">
-                  <div class="kpi-top"><span class="kpi-title">Tổng tiền Tiết kiệm</span><span class="kpi-icon" style="background:var(--warning-bg);">🐷</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--warning-bg);">🐷</span><span class="kpi-title">Tổng tiền Tiết kiệm</span></div>
                   <div class="kpi-value text-gold" id="kpiFinSavings">0đ</div>
                   <div class="kpi-sub"><span>Quỹ tích lũy dài hạn</span></div>
                 </div>
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Số dư thanh toán hiện có</span><span class="kpi-icon" style="background:var(--success-bg);">💳</span></div>
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--success-bg);">💳</span><span class="kpi-title">Số dư thanh toán</span></div>
                   <div class="kpi-value" id="kpiFinCurrentBal">0đ</div>
                   <div class="kpi-sub"><span>Tiền mặt + Ngân hàng</span></div>
                 </div>
                 <div class="kpi-card">
-                  <div class="kpi-top"><span class="kpi-title">Kế hoạch Dự thu / Dự chi</span><span class="kpi-icon" style="background:var(--info-bg);">📅</span></div>
-                  <div style="margin:6px 0;font-size:12.5px;">
+                  <div class="kpi-top"><span class="kpi-icon" style="background:var(--info-bg);">📅</span><span class="kpi-title">Kế hoạch Dự thu / Chi</span></div>
+                  <div style="margin:6px 0;font-size:12px;text-align:center;">
                     <div>Dự thu: <b style="color:var(--success)" id="kpiFinPlanIn">0đ</b></div>
                     <div>Dự chi: <b style="color:var(--danger)" id="kpiFinPlanOut">0đ</b></div>
                   </div>
-                  <div class="kpi-sub"><span>Chưa cộng vào số dư thật</span></div>
+                  <div class="kpi-sub"><span>Chưa cộng số dư thật</span></div>
                 </div>
               </div>
             </div>
@@ -427,12 +447,14 @@
               <div class="acc-title-wrap">
                 <span class="acc-step-badge">5</span>
                 <div class="acc-title-text">
-                  <h3>📊 Nhóm 5: Biểu Đồ Phân Tích Tài Chính & Công Việc</h3>
+                  <h3>📊 Nhóm 5: Biểu Đồ Phân Tích Trực Quan</h3>
                   <p>5 biểu đồ trực quan: Thu nhập, Chi tiêu, Thu – Chi – Tiết kiệm, Nhóm việc & Số dư</p>
+                  <div class="acc-meta-row">
+                    <span class="acc-summary-pill">5 biểu đồ phân tích</span>
+                  </div>
                 </div>
               </div>
               <div class="acc-right-wrap">
-                <span class="acc-summary-pill">5 biểu đồ</span>
                 <span class="acc-chevron">▾</span>
               </div>
             </button>
@@ -470,12 +492,14 @@
               <div class="acc-title-wrap">
                 <span class="acc-step-badge">6</span>
                 <div class="acc-title-text">
-                  <h3>🔔 Nhóm 6: Cảnh Báo Thông Minh & Công Việc Gần Đây</h3>
+                  <h3>🔔 Nhóm 6: Cảnh Báo & Công Việc Gần Đây</h3>
                   <p>Nhắc việc chưa thanh toán, cảnh báo vượt duyệt và danh sách nhiệm vụ mới nhất</p>
+                  <div class="acc-meta-row">
+                    <span class="acc-summary-pill" id="accSumAlerts">Đang mở</span>
+                  </div>
                 </div>
               </div>
               <div class="acc-right-wrap">
-                <span class="acc-summary-pill" id="accSumAlerts">Đang mở</span>
                 <span class="acc-chevron">▾</span>
               </div>
             </button>
@@ -522,7 +546,7 @@
           <div class="panel-card">
             <div class="panel-header">
               <h4>📋 Danh Sách Nhiệm Vụ & Công Việc (Liên kết Tạm ứng & Quyết toán)</h4>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
                 <button class="btn btn-gold" onclick="AppController.openWorkModal()">➕ Thêm công việc mới</button>
                 <button class="btn btn-primary" onclick="AppController.openWorkTxModal()">📥 Ghi nhận Tạm ứng / Thanh toán</button>
               </div>
@@ -570,7 +594,7 @@
           <div class="panel-card">
             <div class="panel-header">
               <h4>🧾 Sổ Chi Tiết Giao Dịch Tạm Ứng, Thanh Toán Bổ Sung & Hoàn Trả</h4>
-              <span style="font-size:11.5px;color:var(--text-muted);">Công thức: Đã nhận = Tạm ứng + Thanh toán bổ sung - Hoàn trả</span>
+              <span class="badge badge-gold">Đã nhận = Tạm ứng + Thanh toán - Hoàn trả</span>
             </div>
             <div class="table-responsive">
               <table class="data-table">
@@ -598,8 +622,8 @@
           <div class="smart-alert-item info" style="margin-bottom:14px;">
             <div>
               <strong>⚙️ Quy tắc Kỳ lương & Chống tính trùng thu nhập công việc:</strong>
-              <div id="incPeriodRuleInfo" style="margin-top:2px;">Chu kỳ lương tự thiết lập.</div>
-              <div style="font-size:11.5px;color:var(--text-secondary);margin-top:2px;">💡 Các khoản tạm ứng và thanh toán từ Công việc được tự động tổng hợp từ Phân hệ Công việc (không cần nhập lại vào bảng dưới đây để tránh tính trùng).</div>
+              <div id="incPeriodRuleInfo" style="margin-top:3px;">Chu kỳ lương tự thiết lập.</div>
+              <div style="font-size:11.5px;color:var(--text-secondary);margin-top:3px;">💡 Các khoản tạm ứng và thanh toán từ Công việc được tự động tổng hợp từ Phân hệ Công việc (không cần nhập lại vào bảng dưới đây để tránh tính trùng).</div>
             </div>
             <button class="btn btn-sm btn-outline" onclick="AppController.switchTab('settings')">Đổi ngày kỳ lương</button>
           </div>
@@ -665,7 +689,7 @@
           <div class="panel-card">
             <div class="panel-header">
               <h4>📊 Kiểm Soát Hạn Mức Ngân Sách Chi Tiêu Theo Nhóm</h4>
-              <span style="font-size:11.5px;color:var(--text-muted);">Xanh: An toàn (&lt;80%) • Vàng: Chú ý (80-100%) • Đỏ: Vượt ngân sách (&gt;100%)</span>
+              <span class="badge badge-info">Xanh: &lt;80% • Vàng: 80-100% • Đỏ: Vượt hạn mức</span>
             </div>
             <div id="expenseBudgetProgressList"></div>
           </div>
@@ -673,7 +697,7 @@
           <div class="panel-card">
             <div class="panel-header">
               <h4>💸 Sổ Ghi Chép Chi Tiêu Hằng Ngày & Tiền Đưa Vợ</h4>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
                 <button class="btn btn-gold" onclick="AppController.openExpenseModal(null, 'Đưa vợ')">💝 Ghi nhận Đưa vợ nhanh</button>
                 <button class="btn btn-primary" onclick="AppController.openExpenseModal()">➕ Thêm khoản chi tiêu</button>
               </div>
@@ -711,28 +735,32 @@
              PHÂN HỆ 5: QUẢN LÝ TIỀN MẶT, NGÂN HÀNG & TIẾT KIỆM
              ================================================================ -->
         <section class="tab-pane" id="tab-accounts">
-          <div class="panel-header" style="margin-bottom:12px;">
-            <h4>🏦 Danh Sách Tài Khoản Tiền Mặt & Ngân Hàng (Số dư đầu kỳ + Tiền vào - Tiền ra)</h4>
-            <div style="display:flex;gap:8px;">
-              <button class="btn btn-gold" onclick="AppController.openTransferModal()">🔄 Chuyển tiền nội bộ</button>
-              <button class="btn btn-primary" onclick="AppController.openAccountModal()">➕ Thêm tài khoản</button>
+          <div class="panel-card">
+            <div class="panel-header">
+              <h4>🏦 Danh Sách Tài Khoản Tiền Mặt & Ngân Hàng (Số dư đầu kỳ + Tiền vào - Tiền ra)</h4>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+                <button class="btn btn-gold" onclick="AppController.openTransferModal()">🔄 Chuyển tiền nội bộ</button>
+                <button class="btn btn-primary" onclick="AppController.openAccountModal()">➕ Thêm tài khoản</button>
+              </div>
             </div>
+            <div class="bank-cards-grid" id="accountsCardGrid" style="margin-bottom:4px;"></div>
           </div>
-          <div class="bank-cards-grid" id="accountsCardGrid"></div>
 
-          <div class="panel-header" style="margin:18px 0 12px;">
-            <h4>🐷 Các Mục Tiêu Tích Lũy & Sổ Tiết Kiệm Cá Nhân</h4>
-            <div style="display:flex;gap:8px;">
-              <button class="btn btn-gold" onclick="AppController.openSavingTxModal(null, 'GUI_TIET_KIEM')">➕ Gửi thêm tiết kiệm</button>
-              <button class="btn btn-primary" onclick="AppController.openSavingGoalModal()">🎯 Tạo mục tiêu tiết kiệm</button>
+          <div class="panel-card">
+            <div class="panel-header">
+              <h4>🐷 Các Mục Tiêu Tích Lũy & Sổ Tiết Kiệm Cá Nhân</h4>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+                <button class="btn btn-gold" onclick="AppController.openSavingTxModal(null, 'GUI_TIET_KIEM')">➕ Gửi thêm tiết kiệm</button>
+                <button class="btn btn-primary" onclick="AppController.openSavingGoalModal()">🎯 Tạo mục tiêu tiết kiệm</button>
+              </div>
             </div>
+            <div class="kpi-grid-4" id="savingsGoalsGrid"></div>
           </div>
-          <div class="kpi-grid-4" id="savingsGoalsGrid" style="margin-bottom:16px;"></div>
 
           <div class="panel-card">
             <div class="panel-header">
               <h4>🔄 Lịch Sử Chuyển Tiền Nội Bộ & Giao Dịch Gửi/Rút Tiết Kiệm</h4>
-              <span style="font-size:11.5px;color:var(--success);font-weight:600;">🛡️ Không tính trùng vào Thu nhập hay Chi tiêu tiêu dùng</span>
+              <span class="badge badge-success">🛡️ Không tính trùng vào Thu nhập hay Chi tiêu</span>
             </div>
             <div class="table-responsive">
               <table class="data-table">
@@ -761,9 +789,9 @@
             <div class="panel-header">
               <div>
                 <h4>📈 BÁO CÁO TỔNG HỢP CÔNG VIỆC – THU NHẬP – CHI TIÊU – TÀI CHÍNH</h4>
-                <p style="font-size:12px;color:var(--text-secondary);margin-top:3px;" id="repPeriodTitle">Kỳ báo cáo hiện tại</p>
+                <p style="font-size:12px;color:var(--text-secondary);margin-top:4px;font-weight:600;" id="repPeriodTitle">Kỳ báo cáo hiện tại</p>
               </div>
-              <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap;">
+              <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
                 <button class="btn btn-gold" onclick="AppController.exportExcelCsv()">📊 Xuất File Excel (.CSV)</button>
                 <button class="btn btn-primary" onclick="window.print()">🖨️ In / Xuất Báo Cáo PDF</button>
               </div>
@@ -884,7 +912,7 @@
                   <input type="text" id="cfgGasWebAppUrl" class="form-control" placeholder="https://script.google.com/macros/s/.../exec" />
                 </div>
               </div>
-              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;justify-content:center;">
                 <button class="btn btn-gold" onclick="AppController.saveSettingsConfig()">💾 Lưu Cấu Hình Hệ Thống</button>
                 <button class="btn btn-primary" onclick="PersonalDB.pushAllToCloud(function(ok,m){AppController.showToast(m);})">☁️ Đẩy dữ liệu lên Google Sheets</button>
                 <button class="btn btn-outline" onclick="PersonalDB.fetchFromCloud(function(ok,m){AppController.refreshAllViews();AppController.showToast(m);})">🔄 Tải dữ liệu từ Google Sheets</button>
@@ -895,8 +923,8 @@
               <div class="panel-header">
                 <h4>🛡️ Trung Tâm Sao Lưu & Khôi Phục An Toàn</h4>
               </div>
-              <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:14px;">
-                Hệ thống tự động sao lưu hằng ngày trên Google Drive (giữ 30 bản ngày + 12 bản cuối tháng). Ngoài ra bạn có thể xuất tệp sao lưu <code>.JSON</code> về điện thoại/máy tính bất cứ lúc nào.
+              <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:14px;line-height:1.55;">
+                Hệ thống tự động sao lưu hằng ngày trên Google Drive (giữ 30 bản ngày + 12 bản cuối tháng). Ngoài ra bạn có thể xuất tệp sao lưu <code>.JSON</code> hoặc nạp dữ liệu mẫu chỉ với 1 chạm.
               </p>
               <div style="display:flex;flex-direction:column;gap:10px;">
                 <button class="btn btn-gold" onclick="AppController.exportBackupJson()">📥 Tải xuống Bản Sao Lưu Toàn Bộ (.JSON)</button>
@@ -904,7 +932,7 @@
                   📤 Khôi phục dữ liệu từ Tệp Sao Lưu (.JSON)
                   <input type="file" accept=".json" style="display:none;" onchange="AppController.handleImportBackupJson(event)" />
                 </label>
-                <button class="btn btn-outline" onclick="if(confirm('Khôi phục lại bộ dữ liệu mẫu ban đầu?')){PersonalDB.resetToSampleData();AppController.refreshAllViews();AppController.showToast('Đã nạp lại dữ liệu mẫu!');}">🌱 Nạp lại Dữ liệu Mẫu để trải nghiệm</button>
+                <button class="btn btn-primary" onclick="AppController.seedSampleDataNow()">🌱 Nạp bộ Dữ liệu Mẫu đầy đủ (Đồng bộ cả Google Sheets)</button>
                 <button class="btn btn-danger" onclick="if(confirm('Xóa toàn bộ giao dịch mẫu để bắt đầu ghi chép sổ tay mới tinh của bạn? (Vẫn giữ nguyên 30 danh mục và tài khoản)')){PersonalDB.clearAllBusinessData();AppController.refreshAllViews();AppController.showToast('Đã làm sạch giao dịch mẫu, sẵn sàng nhập mới!');}">🧹 Xóa dữ liệu mẫu để bắt đầu nhập thật từ đầu</button>
               </div>
             </div>
@@ -913,7 +941,7 @@
           <div class="panel-card">
             <div class="panel-header">
               <h4>🗂️ Quản Lý Danh Mục Hệ Thống (Công việc, Thu nhập, Chi tiêu)</h4>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
                 <button class="btn btn-sm btn-outline" onclick="AppController.switchCategorySubTab('CONG_VIEC')">📋 11 Nhóm Công việc</button>
                 <button class="btn btn-sm btn-outline" onclick="AppController.switchCategorySubTab('THU_NHAP')">💰 7 Nhóm Thu nhập</button>
                 <button class="btn btn-sm btn-outline" onclick="AppController.switchCategorySubTab('CHI_TIEU')">💸 12 Nhóm Chi tiêu</button>
@@ -990,21 +1018,21 @@
   <div class="modal-backdrop" id="modalQuickStyle">
     <div class="modal-dialog">
       <div class="modal-header">
-        <h3>✨ Tùy Chỉnh Giao Diện Phong Thủy & Kỳ Xem Sổ</h3>
+        <h3>✨ Tùy Chỉnh Phong Thủy & Kỳ Xem Sổ</h3>
         <button class="modal-close" onclick="AppController.closeModal('modalQuickStyle')">✕</button>
       </div>
       <div class="modal-body">
         <div class="smart-alert-item info" style="margin-bottom:14px;">
           <div>
-            <strong>📆 Giải thích mục "Kỳ xem sổ (Kỳ thống kê)" trên thanh công cụ:</strong>
-            <p style="font-size:12px;margin-top:4px;line-height:1.45;">
-              Trong thực tế, lương và chi tiêu của bạn thường tính theo <b>Kỳ lương</b> (ví dụ từ <b>ngày 13 tháng trước đến ngày 12 tháng này</b>) chứ không cố định từ mùng 1 đến cuối tháng. Bộ chọn Kỳ giúp bạn lọc toàn bộ Thu nhập, Chi tiêu, Tiền đưa vợ theo đúng Kỳ lương hoặc chuyển sang xem theo Tháng, Quý, Năm chỉ với 1 chạm!
+            <strong>📆 Giải thích mục "Kỳ xem sổ (Kỳ lương)" trên thanh công cụ:</strong>
+            <p style="font-size:12px;margin-top:4px;line-height:1.5;">
+              Trong thực tế, lương và chi tiêu của bạn thường tính theo <b>Kỳ lương</b> (ví dụ từ <b>ngày 13 tháng trước đến ngày 12 tháng này</b> hoặc từ <b>26 tháng trước đến 25 tháng này</b>) chứ không cố định từ mùng 1 đến cuối tháng. Bộ chọn Kỳ giúp bạn lọc toàn bộ Thu nhập, Chi tiêu, Tiền đưa vợ theo đúng Kỳ lương hoặc chuyển sang xem theo Tháng, Quý, Năm chỉ với 1 chạm!
             </p>
           </div>
         </div>
 
         <div class="form-group">
-          <label>1. Chọn Chủ đề Màu sắc Phong Thủy Ngũ Hành (Hợp Mệnh):</label>
+          <label>1. Chọn Chủ đề Màu sắc Phong Thủy Ngũ Hành (Hợp Mệnh)</label>
           <select id="topThemeSelect" class="form-control">
             <option value="KIM_THUY">🌊 Kim Thủy Tụ Tài (Xanh Navy & Vàng Đồng – Mặc định)</option>
             <option value="MOC">🌿 Thủy Mộc Sinh Khí (Xanh Ngọc Lục Bảo & Vàng Kim)</option>
@@ -1015,7 +1043,7 @@
         </div>
 
         <div class="form-group" style="margin-top:12px;">
-          <label>2. Chế độ Hiển thị Ban Ngày / Ban Đêm:</label>
+          <label>2. Chế độ Hiển thị Ban Ngày / Ban Đêm</label>
           <div style="display:flex;gap:10px;">
             <button class="btn btn-outline" style="flex:1;" onclick="AppController.setColorMode('light')">☀️ Chế độ Sáng (Minh Đường)</button>
             <button class="btn btn-primary" style="flex:1;" onclick="AppController.setColorMode('dark')">🌙 Chế độ Tối Hoàng Gia</button>
@@ -1023,25 +1051,26 @@
         </div>
 
         <div class="form-group" style="margin-top:14px;">
-          <label>3. Kết nối Google Sheets từ GitHub (Dán link Web App Google Apps Script):</label>
-          <div style="display:flex;gap:6px;">
+          <label>3. Kết nối Google Sheets từ GitHub (Dán link Web App Google Apps Script)</label>
+          <div style="display:flex;gap:8px;">
             <input type="text" id="quickGasUrlInput" class="form-control" placeholder="https://script.google.com/macros/s/.../exec" />
             <button class="btn btn-gold" onclick="AppController.saveQuickGasUrl()">Kết nối</button>
           </div>
-          <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Khi chạy trên GitHub Pages, dán link Web App vào đây để đồng bộ 2 chiều với Google Sheets mà không bị hiện dòng chữ của Google.</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:5px;">Khi mở qua GitHub Pages, dán link Web App vào đây để đồng bộ 2 chiều với Google Sheets mà không còn dòng chữ cảnh báo của Google.</div>
         </div>
 
         <div class="form-group" style="margin-top:14px;">
-          <label>4. Sao lưu & Đồng bộ nhanh:</label>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button class="btn btn-gold" onclick="AppController.triggerCloudBackup()">💾 Sao lưu ngay</button>
-            <button class="btn btn-outline" onclick="PersonalDB.fetchFromCloud(function(ok,m){AppController.refreshAllViews();AppController.showToast(m);})">🔄 Tải từ Google Sheets</button>
-            <button class="btn btn-outline" onclick="AppController.closeModal('modalQuickStyle');AppController.switchTab('settings')">⚙️ Mở Cài đặt đầy đủ</button>
+          <label>4. Dữ liệu Mẫu & Đồng bộ nhanh</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button class="btn btn-gold" onclick="AppController.seedSampleDataNow()">🌱 Nạp dữ liệu mẫu</button>
+            <button class="btn btn-primary" onclick="AppController.triggerCloudBackup()">💾 Sao lưu ngay</button>
+            <button class="btn btn-outline" onclick="PersonalDB.fetchFromCloud(function(ok,m){AppController.refreshAllViews();AppController.showToast(m);})">🔄 Tải từ Sheets</button>
+            <button class="btn btn-outline" onclick="AppController.closeModal('modalQuickStyle');AppController.switchTab('settings')">⚙️ Mở Cài đặt</button>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-primary" onclick="AppController.closeModal('modalQuickStyle')">Đóng</button>
+        <button class="btn btn-primary" onclick="AppController.closeModal('modalQuickStyle')">Đóng bảng tùy chỉnh</button>
       </div>
     </div>
   </div>
@@ -1093,7 +1122,7 @@
             <input type="date" id="formWorkEnd" class="form-control" onchange="AppController.updateWorkDaysPreview()" />
           </div>
         </div>
-        <div class="smart-alert-item info" style="margin-bottom:12px;">
+        <div class="smart-alert-item info" style="margin-bottom:14px;justify-content:center;text-align:center;">
           <span>⏱️ Số ngày thực hiện tự tính (Kết thúc - Bắt đầu + 1): <strong id="formWorkDaysCalculated">1 ngày</strong></span>
         </div>
         <div class="form-grid-3">
@@ -1122,15 +1151,15 @@
         </div>
         <div class="form-group">
           <label>Nội dung mô tả nhiệm vụ</label>
-          <textarea id="formWorkDesc" class="form-control" rows="2"></textarea>
+          <textarea id="formWorkDesc" class="form-control" rows="2" placeholder="Ghi rõ nội dung, khối lượng thực hiện..."></textarea>
         </div>
         <div class="form-group">
           <label>Ghi chú thêm</label>
-          <input type="text" id="formWorkNote" class="form-control" />
+          <input type="text" id="formWorkNote" class="form-control" placeholder="Ghi chú đối chiếu thanh toán..." />
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" onclick="AppController.closeModal('modalWork')">Hủy</button>
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalWork')">Hủy bỏ</button>
         <button class="btn btn-gold" onclick="AppController.saveWorkFromModal()">💾 Lưu Công Việc</button>
       </div>
     </div>
@@ -1165,7 +1194,7 @@
           </div>
           <div class="form-group">
             <label>Số tiền (VND) *</label>
-            <input type="number" id="formWorkTxAmount" class="form-control" placeholder="VD: 500000" step="50000" />
+            <input type="number" id="formWorkTxAmount" class="form-control" placeholder="VD: 1500000" step="50000" />
           </div>
           <div class="form-group">
             <label>Tài khoản nhận / chi tiền</label>
@@ -1178,11 +1207,11 @@
         </div>
         <div class="form-group">
           <label>Số chứng từ / Mã giao dịch (nếu có)</label>
-          <input type="text" id="formWorkTxDoc" class="form-control" />
+          <input type="text" id="formWorkTxDoc" class="form-control" placeholder="Mã UNC / Phiếu thu..." />
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" onclick="AppController.closeModal('modalWorkTx')">Hủy</button>
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalWorkTx')">Hủy bỏ</button>
         <button class="btn btn-gold" onclick="AppController.saveWorkTxFromModal()">💾 Lưu Giao Dịch</button>
       </div>
     </div>
@@ -1192,12 +1221,12 @@
   <div class="modal-backdrop" id="modalWorkDetail">
     <div class="modal-dialog modal-lg">
       <div class="modal-header">
-        <h3>🔍 Chi Tiết Công Việc & Bảng Đối Chiếu Tạm Ứng – Quyết Toán</h3>
+        <h3>🔍 Chi Tiết Công Việc & Đối Chiếu Tạm Ứng – Quyết Toán</h3>
         <button class="modal-close" onclick="AppController.closeModal('modalWorkDetail')">✕</button>
       </div>
       <div class="modal-body" id="workDetailModalBody"></div>
       <div class="modal-footer">
-        <button class="btn btn-primary" onclick="AppController.closeModal('modalWorkDetail')">Đóng</button>
+        <button class="btn btn-primary" onclick="AppController.closeModal('modalWorkDetail')">Đóng cửa sổ</button>
       </div>
     </div>
   </div>
@@ -1234,7 +1263,7 @@
           </div>
           <div class="form-group">
             <label>Ghi chú</label>
-            <input type="text" id="formIncomeNote" class="form-control" />
+            <input type="text" id="formIncomeNote" class="form-control" placeholder="Ghi chú thêm..." />
           </div>
         </div>
         <div class="form-group">
@@ -1243,7 +1272,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" onclick="AppController.closeModal('modalIncome')">Hủy</button>
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalIncome')">Hủy bỏ</button>
         <button class="btn btn-gold" onclick="AppController.saveIncomeFromModal()">💾 Lưu Khoản Thu</button>
       </div>
     </div>
@@ -1285,7 +1314,7 @@
           </div>
           <div class="form-group">
             <label>Ghi chú</label>
-            <input type="text" id="formExpenseNote" class="form-control" />
+            <input type="text" id="formExpenseNote" class="form-control" placeholder="Ghi chú..." />
           </div>
         </div>
         <div class="form-group">
@@ -1294,7 +1323,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" onclick="AppController.closeModal('modalExpense')">Hủy</button>
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalExpense')">Hủy bỏ</button>
         <button class="btn btn-gold" onclick="AppController.saveExpenseFromModal()">💾 Lưu Khoản Chi</button>
       </div>
     </div>
@@ -1332,11 +1361,11 @@
         </div>
         <div class="form-group">
           <label>Ghi chú (Không lưu mật khẩu hay OTP)</label>
-          <input type="text" id="formAccNote" class="form-control" />
+          <input type="text" id="formAccNote" class="form-control" placeholder="VD: Tài khoản nhận lương chính..." />
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" onclick="AppController.closeModal('modalAccount')">Hủy</button>
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalAccount')">Hủy bỏ</button>
         <button class="btn btn-gold" onclick="AppController.saveAccountFromModal()">💾 Lưu Tài Khoản</button>
       </div>
     </div>
@@ -1365,16 +1394,16 @@
           </div>
           <div class="form-group">
             <label>Số tiền chuyển (VND) *</label>
-            <input type="number" id="formTransferAmount" class="form-control" step="100000" />
+            <input type="number" id="formTransferAmount" class="form-control" step="100000" placeholder="1000000" />
           </div>
         </div>
         <div class="form-group">
           <label>Nội dung chuyển tiền</label>
-          <input type="text" id="formTransferDesc" class="form-control" />
+          <input type="text" id="formTransferDesc" class="form-control" placeholder="VD: Rút tiền mặt nhập quỹ ví..." />
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" onclick="AppController.closeModal('modalTransfer')">Hủy</button>
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalTransfer')">Hủy bỏ</button>
         <button class="btn btn-gold" onclick="AppController.saveTransferFromModal()">💾 Thực Hiện Chuyển Tiền</button>
       </div>
     </div>
@@ -1417,7 +1446,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" onclick="AppController.closeModal('modalSavingGoal')">Hủy</button>
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalSavingGoal')">Hủy bỏ</button>
         <button class="btn btn-gold" onclick="AppController.saveSavingGoalFromModal()">💾 Lưu Mục Tiêu</button>
       </div>
     </div>
@@ -1453,17 +1482,17 @@
           </div>
           <div class="form-group">
             <label>Số tiền (VND) *</label>
-            <input type="number" id="formSavingTxAmount" class="form-control" step="500000" />
+            <input type="number" id="formSavingTxAmount" class="form-control" step="500000" placeholder="2000000" />
           </div>
         </div>
         <div class="form-group">
           <label>Ghi chú</label>
-          <input type="text" id="formSavingTxNote" class="form-control" />
+          <input type="text" id="formSavingTxNote" class="form-control" placeholder="VD: Trích lương tháng 11 gửi tiết kiệm..." />
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" onclick="AppController.closeModal('modalSavingTx')">Hủy</button>
-        <button class="btn btn-gold" onclick="AppController.saveSavingTxFromModal()">💾 Xác Nhận</button>
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalSavingTx')">Hủy bỏ</button>
+        <button class="btn btn-gold" onclick="AppController.saveSavingTxFromModal()">💾 Xác Nhận Giao Dịch</button>
       </div>
     </div>
   </div>
@@ -1500,7 +1529,7 @@
         </div>
         <div class="form-group">
           <label>Nội dung chi tiết</label>
-          <input type="text" id="formPlanDesc" class="form-control" />
+          <input type="text" id="formPlanDesc" class="form-control" placeholder="VD: Dự kiến nhận tiền công hội diễn..." />
         </div>
         <div class="form-group">
           <label>Ghi chú</label>
@@ -1508,7 +1537,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" onclick="AppController.closeModal('modalPlan')">Hủy</button>
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalPlan')">Hủy bỏ</button>
         <button class="btn btn-gold" onclick="AppController.savePlanFromModal()">💾 Lưu Kế Hoạch</button>
       </div>
     </div>
@@ -1547,7 +1576,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" onclick="AppController.closeModal('modalCategory')">Hủy</button>
+        <button class="btn btn-outline" onclick="AppController.closeModal('modalCategory')">Hủy bỏ</button>
         <button class="btn btn-gold" onclick="AppController.saveCategoryFromModal()">💾 Lưu Danh Mục</button>
       </div>
     </div>

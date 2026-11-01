@@ -24,6 +24,15 @@ const AppController = (function() {
   let categorySubTab = 'CONG_VIEC';
 
   function init() {
+    // Nhận diện chế độ iOS Standalone (khi thêm ra Màn hình chính điện thoại) để tự bù khoảng trống tai thỏ
+    try {
+      const isStandalone = window.navigator.standalone === true ||
+        (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+      if (isStandalone) {
+        document.body.classList.add('ios-standalone');
+      }
+    } catch (e) {}
+
     const db = PersonalDB.getState();
 
     // 1. Áp dụng chủ đề Phong thủy Ngũ hành
@@ -284,6 +293,12 @@ const AppController = (function() {
     setText('heroGreetingSub', harmony.advice + ' • ' + themeInfo.motto);
     setText('heroTotalAssets', AccountingEngine.formatCurrency(m.totalMoneyAssets));
     setText('dashboardPeriodBadge', m.periodRange.label);
+
+    // Hiển thị nút "🌱 Nạp dữ liệu mẫu" ngay trên Banner nếu sổ đang trống (0đ)
+    const btnSeed = document.getElementById('btnHeroSeedSample');
+    if (btnSeed) {
+      btnSeed.style.display = (m.totalMoneyAssets === 0 && m.totalWorksCount === 0) ? 'inline-flex' : 'none';
+    }
 
     // 3 Chỉ số tóm tắt nhanh ngay trên Hero Banner
     setText('heroMiniIncome', '+' + AccountingEngine.formatCurrency(m.totalActualIncome));
@@ -1687,6 +1702,18 @@ const AppController = (function() {
       .replace(/"/g, '&quot;');
   }
 
+  function seedSampleDataNow() {
+    PersonalDB.resetToSampleData();
+    refreshAllViews();
+    closeModal('modalQuickStyle');
+    showToast('🌱 Đã nạp bộ dữ liệu mẫu đầy đủ!');
+    if (PersonalDB.isRunningInGAS() || PersonalDB.getRemoteGasUrl()) {
+      PersonalDB.pushAllToCloud(function(ok, msg) {
+        if (ok) showToast('☁️ Đã đồng bộ dữ liệu mẫu lên Google Sheets!');
+      });
+    }
+  }
+
   function showToast(msg) {
     const container = document.getElementById('toastContainer');
     if (!container) return;
@@ -1754,6 +1781,7 @@ const AppController = (function() {
     updateExpenseFilter: updateExpenseFilter,
     updatePlanFilter: updatePlanFilter,
     refreshAllViews: refreshAllViews,
+    seedSampleDataNow: seedSampleDataNow,
     showToast: showToast
   };
 })();
